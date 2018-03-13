@@ -1,0 +1,50 @@
+/*for the header*/
+body {
+  padding-top: 54px;
+}
+
+@media (min-width: 992px) {
+  body {
+    padding-top: 56px;
+  }
+}
+.center-text{
+    text-align:center;
+}
+.center-div{
+    margin-left: auto;
+    margin-right: auto;
+}
+h1, h2, h3, h4, p, a{
+    margin-top: 3px;
+    margin-bottom: 3px;
+    font-family: "Comic Sans MS";
+}
+.full{
+    width:100%;
+}
+.top25{
+    margin-top:25px;
+}
+.top50{
+    margin-top:50px;
+}
+.top100{
+    margin-top:100px;
+}
+.hidden{
+    display:none;
+}
+.nav-link, #clickable{
+    cursor:pointer;
+}
+.form-control{
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+.selected{
+    background:#0f0;
+}
+.dselect{
+    background:#f00;
+}
