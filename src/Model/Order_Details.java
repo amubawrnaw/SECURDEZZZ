@@ -10,11 +10,9 @@ public class Order_Details{
 		private int order_id;
 		private int product_id;
 		private int qty;
-		private DBConnection dbc;
 		private ArrayList<Order_Status> status;
 		
 		public Order_Details(){
-			dbc = new DBConnection();
 		}
 
 		public Order_Details(int detail_id, int order_id, int product_id, int qty, ArrayList<Order_Status> status) {
@@ -66,8 +64,7 @@ public class Order_Details{
 			this.status = status;
 		}
 		
-		public static Order_Details toOrderDetail(ResultSet rs){
-			DBConnection dbc = new DBConnection();
+		public static Order_Details toOrderDetail(ResultSet rs, DBConnection dbc){
 			Order_Details od = null;
 			try{
 				od = new Order_Details();
@@ -76,11 +73,11 @@ public class Order_Details{
 				od.setProduct_id(rs.getInt("product_id"));
 				od.setQty(rs.getInt("qty"));
 				
-				String query = "SELECT * FROM order_status WHERE detail_id = " + od.getDetail_id();
+				String query = "SELECT * FROM securde.order_status WHERE detail_id = " + od.getDetail_id();
 				ArrayList<Order_Status> os = new ArrayList<>();
 				ResultSet r = dbc.executeQuery(query);
 				while(r.next()){
-					os.add(Order_Status.toOrderStatus(rs));
+					os.add(Order_Status.toOrderStatus(r));
 				}
 					
 				od.setStatus(os);

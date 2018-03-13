@@ -23,7 +23,7 @@
         $.get("getOrdersByProductManager?user="+user,function(obj){
             jsonarr = JSON.parse(obj);
             console.log(jsonarr);
-            /*
+            /*)
             for(var i = 0 ; i < jsonarr.length ; i++){
                 var jason = jsonarr[i];
                 

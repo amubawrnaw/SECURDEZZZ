@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import DB.DBConnection;
 import DB.OrderHelper;
 import DB.ProductManagerHelper;
+import DB.UserHelper;
 import Model.Order;
 import Model.Order_Details;
 import Model.Order_Status;
@@ -48,7 +49,12 @@ public class OrderServlet extends HttpServlet {
 			break;
 			
 		case "/getOrderByUserId":
-			getOrderByUserId(request, response);
+			try {
+				getOrderByUserId(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 			
 		case "/getOrdersByProductManager":
@@ -69,13 +75,13 @@ public class OrderServlet extends HttpServlet {
 		oh.addOrderStatus(os);
 	}
 	
-	private void getOrderByUserId(HttpServletRequest request, HttpServletResponse response){
-		
-		int userId = Integer.parseInt(request.getParameter("userId"));
-		
-		
+	private void getOrderByUserId(HttpServletRequest request, HttpServletResponse response) throws SQLException{
+		String username = request.getParameter("username");
+		UserHelper uh = new UserHelper();
+		int userId = uh.getUserIdByUsername(username);
+		System.out.println("getting by userId");
 		Order[] orders = oh.getOrdersByUserId(userId);
-		
+		//System.out.println(gson.toJson(orders));
 		try {
 			response.getWriter().write(gson.toJson(orders));
 		} catch (IOException e) {

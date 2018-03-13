@@ -1,6 +1,7 @@
 <body>
 <div id = "userDetails">
-	
+</div>
+<div id = "orderDetails">
 </div>
 <button id ="reloadCredits">Reload Credits</button>
 </body>
@@ -18,6 +19,11 @@
 			$("#userDetails").append(row);
 		}
 	});
+	
+	$.get("getOrderByUserId?username=" + username, function(obj){
+		console.log(obj);
+	});
+	
 	
 	$("#reloadCredits").click(function(){
 		$("#center").load("reloadCredits.jsp");

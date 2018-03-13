@@ -77,12 +77,12 @@ public class Order {
 			o.setDateCreated(rs.getDate("date_created") + "");
 			o.setOrder_id(rs.getInt("order_id"));
 			
-			String query = "SELECT * FROM order_details WHERE orderid = " + o.getOrder_id();
+			String query = "SELECT * FROM securde.order_details WHERE orderid = " + o.getOrder_id();
 			ResultSet r = dbc.executeQuery(query);
 			ArrayList<Order_Details> od = new ArrayList<>();
 			
 			while(r.next()){
-				od.add(Order_Details.toOrderDetail(rs));
+				od.add(Order_Details.toOrderDetail(r, dbc));
 			}
 			o.setOrders(od);
 		}catch(Exception e){

@@ -29,22 +29,22 @@ public class OrderHelper {
 	
 	
 	public Order[] getOrdersByUserId(int userId){
-		String query = "SELECT * FROM order WHERE u_id = " + userId;
+		String query = "SELECT * FROM securde.order WHERE u_id = " + userId;
 		return getOrders(query);
 	}
 	
 	public Order_Details[] getOrdersByProductManager(int pm){
 		ArrayList<Order_Details> od = new ArrayList<>();
 		String query = "SELECT od.detail_id, od.orderid, od.product_id, od.qty "
-				+ "FROM order_details od, product p"
+				+ "FROM order_details od, product p "
 				+ "WHERE p.p_manager = " + pm +" "
 				+ "AND p.prod_id = od.product_id";
-		
+		System.out.println(query);
 		try{
 			ResultSet rs = dbc.executeQuery(query);
 			
 			while(rs.next()){
-				od.add(Order_Details.toOrderDetail(rs));
+				od.add(Order_Details.toOrderDetail(rs, dbc));
 			}
 		}catch(Exception e){
 			e.printStackTrace();
