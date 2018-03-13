@@ -18,6 +18,8 @@
         
         </div>
         <button class = "btn btn-primary top25" id = "delete">Delete</button>
+        <button class = "btn btn-primary top25" id = "editQty">Edit Quantity</button>
+        <input type = "number" id = "newQty"/>
     </div>
     <div class = "col-md-4">
         <h2 id = "balance"></h2>
@@ -62,6 +64,23 @@
             $("#center").load("cart.jsp");
         });
     });
+    $("#editQty").click(function(){
+    	var prodId = $("#items").find(".dselect").children(1).html();
+    	console.log(prodId);
+    	var quantity = document.getElementById("newQty").value;
+    	console.log("Editing quantity to be " + quantity);
+    	if (quantity == 0)
+    		alert("Delete the product instead");
+    	else{
+    		
+    		$.post("CartServlet?param=addItemToCart&prodId="+prodId+"&username="+user+"&qty="+quantity, function(obj){
+    			if(obj == 'true')
+    				$("#center").load("cart.jsp");
+    			else
+    				alert("Error");
+    		});
+    	}
+    });
     if(user!=null){
         $.get("CartServlet?username="+user,function(obj){
             jsonarr = JSON.parse(obj);
@@ -70,7 +89,7 @@
                 var jason = jsonarr[i];
 				//alert(i + " " + jsonarr.length);
                 $.get("ProductServlet?param=getById&id="+jason.pid, function(obj){
-                    addProductDetails(jason, i, obj);
+                    addProductDetails(jason, jason.pid, obj);
                 });
             }
         });
@@ -79,7 +98,7 @@
         	var prod = JSON.parse(obj)[0];
             var row = $("<div>");
             row.addClass("row selectable");
-            row.append("<p class = 'hidden'>" + i + "</p>");
+            row.append("<p class = 'hidden'>" + jason.pid + "</p>");
             row.append("<div class = 'col-md-3'>"+prod.name+"</div>");
             row.append("<div class = 'col-md-3'>"+prod.price+"</div>");
             row.append("<div class = 'col-md-3'>"+jason.qty+"</div>");
