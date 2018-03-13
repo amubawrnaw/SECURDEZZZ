@@ -26,6 +26,7 @@
     </div>
 </div>
 <script>
+	jQuery.ajaxSetup({async:false});
     var dselect = false;
     var jsonarr;
     var total = 0;
@@ -41,7 +42,8 @@
     $("#delete").click(function(){
         var index = $("#items").find(".dselect").children(1).html();
         console.log(index);
-        $.get("CartServlet?param=removeFromCart&username="+user+"&prodId="+jsonarr[index].pid,function(obj){
+        $.post("CartServlet?param=removeFromCart&username="+user+"&prodId="+jsonarr[index].pid,function(obj){
+        	console.log("Deleting object");
             $("#center").load("cart.jsp");
         });
     });
@@ -51,25 +53,27 @@
 
             for(var i = 0 ; i < jsonarr.length ; i++){
                 var jason = jsonarr[i];
-
+				//alert(i + " " + jsonarr.length);
                 $.get("ProductServlet?param=getById&id="+jason.pid, function(obj){
-                    var prod = JSON.parse(obj)[0];
-                    
-                    var row = $("<div>"); 
-                    row.addClass("row selectable");
-                    
-                    row.append("<p class = 'hidden'>" + i + "</p>");
-                    row.append("<div class = 'col-md-3'>"+prod.name+"</div>");
-                    row.append("<div class = 'col-md-3'>"+prod.price+"</div>");
-                    row.append("<div class = 'col-md-3'>"+jason.qty+"</div>");
-                    row.append("<div class = 'col-md-3'>"+(prod.price * jason.qty)+"</div>");
-                    total+=prod.price * jason.qty;
-                    $("#total").html("P"+total);
-                    
-                    $("#items").append(row);
+                    addProductDetails(jason, i, obj);
                 });
             }
         });
+        
+        function addProductDetails(jason, i, obj){
+        	var prod = JSON.parse(obj)[0];
+            var row = $("<div>");
+            row.addClass("row selectable");
+            row.append("<p class = 'hidden'>" + i + "</p>");
+            row.append("<div class = 'col-md-3'>"+prod.name+"</div>");
+            row.append("<div class = 'col-md-3'>"+prod.price+"</div>");
+            row.append("<div class = 'col-md-3'>"+jason.qty+"</div>");
+            row.append("<div class = 'col-md-3'>"+(prod.price * jason.qty)+"</div>");
+            total+=prod.price * jason.qty;
+            $("#total").html("P"+total);
+            
+            $("#items").append(row);
+        }
     }
     
 </script>
