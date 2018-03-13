@@ -2,6 +2,7 @@ package DB;
 
 import java.sql.*;
 import java.util.ArrayList;
+
 import Model.*;
 
 //TODO import cart
@@ -20,28 +21,38 @@ public class CartHelper {
 	
 	public boolean checkoutCart(int userId, String address) {
 		boolean success = false;
-		String query = "DELETE * FROM cart WHERE user_id = " + userId;
-		String query2 = "INSERT INTO order(u_id, date_created, address) VALUES("
-				+ userId + ", CURDATE(), '"
-				+ address + "')";
-		String query3 = "SELECT MAX(order_id) FROM order WHERE u_id = " + userId;
+		String query = "DELETE FROM cart WHERE user_id = " + userId;
+		String query2 = "INSERT INTO securde.order(u_id, date_created, address) VALUES("
+				+ userId + ", " + "'" + 
+				new java.sql.Date(System.currentTimeMillis())+ "'" 
+				+ ", '" + address + "');";
+		System.out.println(query2);
+		String query3 = "SELECT MAX(order_id) FROM securde.order WHERE u_id = " + userId;
 		String queryBalance = "SELECT credits FROM users WHERE user_id = " + userId;
 		Cart[] carts = getCartForUser(userId);
 		dbc.updateQuery(query2);
 		int order_id;
 		try{
 			ResultSet rs = dbc.executeQuery(queryBalance);
-			Double userBalance = rs.getDouble("credits");
+			Double userBalance = 0.0;
+			if(rs.next())
+				userBalance = rs.getDouble("credits");
 			
 			rs = dbc.executeQuery(query3);
-			order_id = rs.getInt("MAX(order_id)");
+			order_id = 0;
+			if(rs.next())
+				order_id = rs.getInt("MAX(order_id)");
 			
 			Double cartTotal = 0.0;
 			String queryPrice;
 			
 			for(Cart c : carts){
 				queryPrice = "SELECT price FROM product WHERE prod_id = " + c.getPid();
-				cartTotal += dbc.executeQuery(queryPrice).getDouble("price") * c.getQty();
+				rs = dbc.executeQuery(queryPrice);
+				double price = 0.0;
+				if(rs.next())
+					price = rs.getDouble("price");
+				cartTotal += price * c.getQty();
 			}
 			
 			if(cartTotal <= userBalance){
@@ -55,7 +66,9 @@ public class CartHelper {
 					dbc.updateQuery(query5);
 					
 					rs = dbc.executeQuery(query4);
-					int latestDetailId = rs.getInt("MAX(detail_id)");
+					int latestDetailId = 0;
+					if(rs.next())
+						latestDetailId = rs.getInt("MAX(detail_id)");
 					
 					String query6 = "INSERT INTO order_status(date,status,detail_id) VALUES(CURDATE(),"
 							+ "'Order Placed', "

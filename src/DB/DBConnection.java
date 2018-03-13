@@ -4,9 +4,9 @@ import java.sql.*;
 public class DBConnection {
 	private String	driverName	= "com.mysql.jdbc.Driver";
 	private String	url		= "jdbc:mysql://localhost:3306/";
-	private String	database	= "securdb";
+	private String	database	= "securde";
 	private String	username	= "root";
-	private String	password	= "1234";
+	private String	password	= "Mykimobae!1";
 	public Connection getConnection() {
 		
 		try {
@@ -34,6 +34,7 @@ public class DBConnection {
             return null;
         }
         public void updateQuery(String s){
+        	System.out.println("Executing query " + s);
             try{
                 Statement statement = getConnection().createStatement();
                 statement.executeUpdate(s);

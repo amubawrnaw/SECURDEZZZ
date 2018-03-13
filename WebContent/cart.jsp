@@ -23,7 +23,9 @@
         <h2 id = "balance"></h2>
         <h2 class = "top100" id = "total"></h2>
         <button class = "btn btn-primary" id = "checkOut">Check Out</button>
+        <p>	Address (for shipping): <textarea id = "address"style="height:200px"/></textarea></p>
     </div>
+    
 </div>
 <script>
 	jQuery.ajaxSetup({async:false});
@@ -37,7 +39,20 @@
     });
     
     $("#checkOut").click(function(){
-        
+    	var address = document.getElementById("address").value;
+    	if (address != '')
+	        $.post("CartServlet?param=checkOutCart&username="+user+"&address="+address, function(obj){
+	        	if(obj == 'true'){
+	        		console.log("Cart checked out");
+	        		$("#center").load("index.jsp");
+	        	}       		
+	        	else{
+	        		alert("Insufficient Funds, please reload");
+	        		$("#center").load("reload.jsp");
+	        	}	
+	        });
+    	else
+    		alert("No address given");
     });
     $("#delete").click(function(){
         var index = $("#items").find(".dselect").children(1).html();
