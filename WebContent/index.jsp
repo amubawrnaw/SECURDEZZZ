@@ -8,7 +8,7 @@
         <jsp:include page="header-guest.jsp"></jsp:include>
     </div>
     <div id = "center">
-        
+        <jsp:include page="browse-shop.jsp"></jsp:include>
     </div>
     
     

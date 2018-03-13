@@ -9,10 +9,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import Model.Cart;
-import DB.*;
-import Model.*;
-import com.google.gson.*;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import DB.CartHelper;
+import DB.ProductHelper;
+import DB.UserHelper;
+import Model.Product;
 /**
  * Servlet implementation class CartServlet
  */
