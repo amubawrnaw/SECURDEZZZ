@@ -65,7 +65,7 @@
         });
     });
     $("#editQty").click(function(){
-    	var prodId = $("#items").find(".dselect").children(1).html();
+    	var index = $("#items").find(".dselect").children(1).html();
     	console.log(prodId);
     	var quantity = document.getElementById("newQty").value;
     	console.log("Editing quantity to be " + quantity);
@@ -73,7 +73,7 @@
     		alert("Delete the product instead");
     	else{
     		
-    		$.post("CartServlet?param=addItemToCart&prodId="+prodId+"&username="+user+"&qty="+quantity, function(obj){
+    		$.post("CartServlet?param=addItemToCart&prodId="+jsonarr[index].pid+"&username="+user+"&qty="+quantity, function(obj){
     			if(obj == 'true')
     				$("#center").load("cart.jsp");
     			else
@@ -89,7 +89,7 @@
                 var jason = jsonarr[i];
 				//alert(i + " " + jsonarr.length);
                 $.get("ProductServlet?param=getById&id="+jason.pid, function(obj){
-                    addProductDetails(jason, jason.pid, obj);
+                    addProductDetails(jason, i, obj);
                 });
             }
         });
@@ -98,7 +98,7 @@
         	var prod = JSON.parse(obj)[0];
             var row = $("<div>");
             row.addClass("row selectable");
-            row.append("<p class = 'hidden'>" + jason.pid + "</p>");
+            row.append("<p class = 'hidden'>" + i + "</p>");
             row.append("<div class = 'col-md-3'>"+prod.name+"</div>");
             row.append("<div class = 'col-md-3'>"+prod.price+"</div>");
             row.append("<div class = 'col-md-3'>"+jason.qty+"</div>");
