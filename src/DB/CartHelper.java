@@ -22,12 +22,10 @@ public class CartHelper {
 	public boolean checkoutCart(int userId, String address) {
 		boolean success = false;
 		String query = "DELETE FROM cart WHERE user_id = " + userId;
-		String query2 = "INSERT INTO securde.order(u_id, date_created, address) VALUES("
-				+ userId + ", " + "'" + 
-				new java.sql.Date(System.currentTimeMillis())+ "'" 
-				+ ", '" + address + "');";
+		String query2 = "INSERT INTO `order`(u_id, date_created, address) VALUES("
+				+ userId + ", CURDATE(), '" + address + "');";
 		System.out.println(query2);
-		String query3 = "SELECT MAX(order_id) FROM securde.order WHERE u_id = " + userId;
+		String query3 = "SELECT MAX(order_id) FROM `order` WHERE order.u_id = " + userId;
 		String queryBalance = "SELECT credits FROM users WHERE user_id = " + userId;
 		Cart[] carts = getCartForUser(userId);
 		dbc.updateQuery(query2);
@@ -38,20 +36,20 @@ public class CartHelper {
 			if(rs.next())
 				userBalance = rs.getDouble("credits");
 			
-			rs = dbc.executeQuery(query3);
+			ResultSet rs2 = dbc.executeQuery(query3);
 			order_id = 0;
-			if(rs.next())
-				order_id = rs.getInt("MAX(order_id)");
+			if(rs2.next())
+				order_id = rs2.getInt("MAX(order_id)");
 			
 			Double cartTotal = 0.0;
 			String queryPrice;
 			
 			for(Cart c : carts){
 				queryPrice = "SELECT price FROM product WHERE prod_id = " + c.getPid();
-				rs = dbc.executeQuery(queryPrice);
+				ResultSet rs3 = dbc.executeQuery(queryPrice);
 				double price = 0.0;
-				if(rs.next())
-					price = rs.getDouble("price");
+				if(rs3.next())
+					price = rs3.getDouble("price");
 				cartTotal += price * c.getQty();
 			}
 			
@@ -65,10 +63,10 @@ public class CartHelper {
 							+ c.getQty() + ")";
 					dbc.updateQuery(query5);
 					
-					rs = dbc.executeQuery(query4);
+					ResultSet rs4 = dbc.executeQuery(query4);
 					int latestDetailId = 0;
-					if(rs.next())
-						latestDetailId = rs.getInt("MAX(detail_id)");
+					if(rs4.next())
+						latestDetailId = rs4.getInt("MAX(detail_id)");
 					
 					String query6 = "INSERT INTO order_status(date,status,detail_id) VALUES(CURDATE(),"
 							+ "'Order Placed', "

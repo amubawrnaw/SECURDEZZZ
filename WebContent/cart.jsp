@@ -42,13 +42,14 @@
     	var address = document.getElementById("address").value;
     	if (address != '')
 	        $.post("CartServlet?param=checkOutCart&username="+user+"&address="+address, function(obj){
+                console.log(obj);
 	        	if(obj == 'true'){
 	        		console.log("Cart checked out");
 	        		$("#center").load("index.jsp");
 	        	}       		
 	        	else{
 	        		alert("Insufficient Funds, please reload");
-	        		$("#center").load("reload.jsp");
+	        		$("#center").load("reloadCredits.jsp");
 	        	}	
 	        });
     	else
@@ -74,7 +75,10 @@
                 });
             }
         });
-        
+        $.get("UserServlet?param=user&user="+user,function(obj){
+            var jason = JSON.parse(obj);
+            $("#balance").html("Balance: P"+jason.credits);
+        });
         function addProductDetails(jason, i, obj){
         	var prod = JSON.parse(obj)[0];
             var row = $("<div>");
