@@ -16,38 +16,77 @@ public class UserHelper {
 		dbc.getConnection();
 	};
 	
-	public User getUserByUsername(String username) throws SQLException{
-		String query = "SELECT * FROM users WHERE username = '"+ username + "'";
-		System.out.println(username);
-		ResultSet rs = dbc.executeQuery(query);
-		
+	public User getUserByUsername(String username) throws SQLException{	
+		String query = "SELECT * FROM users WHERE username = ?";
+		ResultSet rs = null;
 		User u = null;
-		if(rs.next()){
-			u = User.toUser(rs);
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				u = User.toUser(rs);
+			}
+			pstmt.close();
+			
+			System.out.println("User with username " + username + " found");
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
 		}
+
 		return u;
 	}
 	
 	public int getUserIdByUsername(String username)throws SQLException{
-		String query = "SELECT user_id FROM users WHERE username = '"+ username + "'";
+		String query = "SELECT user_id FROM users WHERE username = ?";
 		System.out.println(username);
-		ResultSet rs = dbc.executeQuery(query);
-		
+		ResultSet rs = null;
 		int id = -1;
-		if(rs.next()){
-			id = rs.getInt("user_id");
-		}
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()){
+				id = rs.getInt("user_id");
+			}
+			pstmt.close();
+			
+			System.out.println("User with username " + username + " found, returning id");
+		}catch(Exception e){
+			e.printStackTrace();
+			return -1;
+		}	
 		return id;
 	}
 	public User login(String username, String password) throws SQLException{
 		System.out.println("Logging in user " + username);
-		String query = "SELECT * FROM users WHERE username = '"+ username + "' "
-				+ "AND password = '" + password + "'";
-		ResultSet rs = dbc.executeQuery(query);
+		String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+		ResultSet rs = null;
 		User u = null;
-		if(rs.next()){
-			u = User.toUser(rs);
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				u = User.toUser(rs);
+			}
+			pstmt.close();
+			
+			System.out.println("User wither username " + username + " found");
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
 		}
+		
 		return u;
 	}
 	
@@ -108,13 +147,25 @@ public class UserHelper {
 		return true;
 	}
 	public double getCredits(String username) throws SQLException {
-		String query = "SELECT credits FROM users WHERE username = '"+ username + "'";
-		ResultSet rs = dbc.executeQuery(query);
+		String query = "SELECT credits FROM users WHERE username = ?";
+		ResultSet rs = null;
 		double val = 0;
-		if(rs.next())
-		{
-			val = rs.getDouble("credits");
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			pstmt.close();
+			if(rs.next()){
+				val = rs.getDouble("credits");
+			}
+			System.out.println("Getting credits for " + username);
+		}catch(Exception e){
+			e.printStackTrace();
+			return 0;
 		}
+		
 		return val;
 	}
 	public void reloadCredits(String username, double amount) throws SQLException {
@@ -142,14 +193,23 @@ public class UserHelper {
 		if(u == null){
 			System.out.println("Registration successful for user " + user.getUsername());
 			regSuccess = true;
-			String query = "INSERT INTO users(fname, lname, username, password, credits) VALUES("
-					+ "'" + user.getFname() + "', "
-					+ "'" + user.getLname() + "', "
-					+ "'" + user.getUsername() + "', "
-					+ "'" + password+ "', "
-					+ "'" + user.getCredits() + "');";
+			String query = "INSERT INTO users(fname, lname, username, password, credits) " 
+			+ "VALUES(?,?,?,?,?)";
+			try{
+				
+				PreparedStatement pstmt = dbc.createPreparedStatement(query);
+				pstmt.setString(1, user.getFname());
+				pstmt.setString(2, user.getLname());
+				pstmt.setString(3, user.getUsername());
+				pstmt.setString(4, password);
+				pstmt.setDouble(5, user.getCredits());
+				pstmt.executeUpdate();
+				pstmt.close();
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 			
-			dbc.updateQuery(query);
 		}
 		return regSuccess;
 	}

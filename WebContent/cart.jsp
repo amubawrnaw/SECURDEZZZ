@@ -66,7 +66,7 @@
     });
     $("#editQty").click(function(){
     	var index = $("#items").find(".dselect").children(1).html();
-    	console.log(prodId);
+    	console.log(index);
     	var quantity = document.getElementById("newQty").value;
     	console.log("Editing quantity to be " + quantity);
     	if (quantity == 0)
