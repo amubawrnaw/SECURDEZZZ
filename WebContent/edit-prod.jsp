@@ -7,14 +7,44 @@
     $("#Image").val(selectedProduct.img_link);
     $("#Price").val(selectedProduct.price);
     
+    $("#Name").keypress(function(event){
+        var ew = event.which;
+        if(ew == 32)
+            return true;
+        if(48 <= ew && ew <= 57)
+            return true;
+        if(65 <= ew && ew <= 90)
+            return true;
+        if(97 <= ew && ew <= 122)
+            return true;
+        return false;
+    });
+    $("#Image").keypress(function(event){
+        var ew = event.which;
+        if(ew == 32)
+            return true;
+        if(48 <= ew && ew <= 57)
+            return true;
+        if(65 <= ew && ew <= 90)
+            return true;
+        if(97 <= ew && ew <= 122)
+            return true;
+        return false;
+    });
     $("#btnSubmit").click(function(){
-        var Name = $("#Name").val();
-        var Image = $("#Image").val();
-        var Price = $("#Price").val();
+    	var Name = $("#Name").val();
+
+        var Image = $("#Image").val()
+
+        var Price = $("#Price").val()
+        
         var Quantity = $("#Quantity").val();
         
-        $.post("ProductManagerServlet?param=edit&name="+Name+"&price="+Price+"&imgLink="+Image+"&username="+user+"&prodId="+selectedProduct.p_id,function(obj){
-            $("#center").load("man-prods.jsp");
+        if(Quantity < 0 || Price < 0)
+        	alert("Invalid input");
+        else
+			$.post("ProductManagerServlet?param=edit&name="+Name+"&price="+Price+"&imgLink="+Image+"&username="+user+"&prodId="+selectedProduct.p_id,function(obj){
+           		$("#center").load("man-prods.jsp");
         });
     });
 </script>

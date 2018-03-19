@@ -6,6 +6,26 @@
     </div>
 </div>
 <script>
+	$("#usernameInput").keypress(function(event){
+	    var ew = event.which;
+	    if(48 <= ew && ew <= 57)
+	        return true;
+	    if(65 <= ew && ew <= 90)
+	        return true;
+	    if(97 <= ew && ew <= 122)
+	        return true;
+	    return false;
+	});
+	$("#passwordInput").keypress(function(event){
+	    var ew = event.which;
+	    if(48 <= ew && ew <= 57)
+	        return true;
+	    if(65 <= ew && ew <= 90)
+	        return true;
+	    if(97 <= ew && ew <= 122)
+	        return true;
+	    return false;
+	});
     $("#btnSubmit").click(function(){
         console.log("Hehe");
         var chec = 'false';
