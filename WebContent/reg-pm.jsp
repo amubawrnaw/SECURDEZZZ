@@ -16,7 +16,10 @@
 	        console.log(obj);
 	        if(obj == "true"){
 	        	alert("Register Success!");
-	            $("#center").load("login.jsp");
+	        	$.get("UserServlet?user="+user+"&pass="+pass+"&param=login", function(obj){
+               	 $("#center").load("login.jsp");
+               	 window.location.reload();
+               });
 	        }else{
 	            alert("Username already taken!");
 	        }
