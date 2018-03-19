@@ -54,22 +54,16 @@ public class UserServlet extends HttpServlet {
 		}else if(param.compareToIgnoreCase("login") == 0){
 			String user = (String) request.getParameter("user").split("&")[0];
 			String pass = (String) request.getParameter("pass").split("&")[0];
-			boolean remember = Boolean.parseBoolean((String)request.getParameter("remembered").split("&")[0]);
+			//boolean remember = Boolean.parseBoolean((String)request.getParameter("remembered").split("&")[0]);
 			try {
 				if(helper.login(user, pass) != null){
 					b = true;
 					Cookie cookie = new Cookie("username", user);
-					if(remember){
-						cookie.setMaxAge(60*60*24*21);
-					}
 					System.out.println("User " + user + " logged in");
 					response.addCookie(cookie);
 				}else if(pmHelper.login(user,pass) != null){
 					b = true;
 					Cookie cookie = new Cookie("username", user);
-					if(remember){
-						cookie.setMaxAge(60*60*24*21);
-					}
 					System.out.println("PM " + user + " logged in");
 					response.addCookie(cookie);
 				}
