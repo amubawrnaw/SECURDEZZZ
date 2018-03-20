@@ -7,8 +7,10 @@
     <div id = "headerContainer">
         <jsp:include page="header-guest.jsp"></jsp:include>
     </div>
-    <div id = "center">
-        <jsp:include page="browse-shop.jsp"></jsp:include>
+    <div class="container">
+		<div id="center">
+			<jsp:include page="default.jsp"></jsp:include>
+		</div>
     </div>
     
     
@@ -19,17 +21,19 @@
             $("#center").load("item-info.jsp");
         }
         if (name_or_null != null){
-            $.get("UserServlet?user=" + name_or_null + "&param=user", function(obj){
-                var person = JSON.parse(obj);
-                console.log(person);
-                if (person.fname != null){
-                    $('#headerContainer').load("header-user.jsp");
-                }else if(person.storeName != null){
-                    $('#headerContainer').load("header-pm.jsp");
-                }
-                $("#center").load("default.jsp");
-            });
+            
         }
+        
+        $.get("UserServlet?user=" + name_or_null + "&param=user", function(obj){
+            var person = JSON.parse(obj);
+            console.log(person);
+            if (person.fname != null){
+                $('#headerContainer').load("header-user.jsp");
+            }else if(person.storeName != null){
+                $('#headerContainer').load("header-pm.jsp");
+            }
+            $("#center").load("default.jsp");
+        });
         
     </script>
 </html>
