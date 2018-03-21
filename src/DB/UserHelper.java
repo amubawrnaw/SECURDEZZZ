@@ -8,12 +8,15 @@ import java.util.Objects;
 
 import Model.ProductManager;
 import Model.User;
+import Model.PasswordHasher;
 
 public class UserHelper {
 	private DBConnection dbc;
+	private PasswordHasher ph;
 	public UserHelper(){
 		dbc = new DBConnection();
 		dbc.getConnection();
+		ph = new PasswordHasher();
 	};
 	
 	public User getUserByUsername(String username) throws SQLException{	
@@ -66,7 +69,7 @@ public class UserHelper {
 	}
 	public User login(String username, String password) throws SQLException{
 		System.out.println("Logging in user " + username);
-		String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+		String query = "SELECT * FROM users WHERE username = ?";
 		ResultSet rs = null;
 		User u = null;
 		try{
@@ -74,14 +77,15 @@ public class UserHelper {
 			PreparedStatement pstmt = dbc.createPreparedStatement(query);
 			
 			pstmt.setString(1, username);
-			pstmt.setString(2, password);
 			rs = pstmt.executeQuery();
 			if(rs.next()){
-				u = User.toUser(rs);
+				System.out.println(rs.getString("password"));
+				if(ph.checkPassword(rs.getString("password"), password, getUserSalt(username)))
+					u = User.toUser(rs);
 			}
 			pstmt.close();
 			
-			System.out.println("User wither username " + username + " found");
+			System.out.println("User with username " + username + " found");
 		}catch(Exception e){
 			e.printStackTrace();
 			return null;
@@ -93,10 +97,10 @@ public class UserHelper {
 	public boolean editPassword(String username, String newPassword){
 		String query = "UPDATE users SET password = ? WHERE username = ?";
 		try{
-			
+			String salt = getUserSalt(username);
 			PreparedStatement pstmt = dbc.createPreparedStatement(query);
-			
-			pstmt.setString(1, newPassword);
+			String hashedPassword = ph.hashPassword(newPassword, salt);
+			pstmt.setString(1, hashedPassword);
 			pstmt.setString(2, username);
 			pstmt.executeUpdate();
 			pstmt.close();
@@ -193,16 +197,17 @@ public class UserHelper {
 		if(u == null){
 			System.out.println("Registration successful for user " + user.getUsername());
 			regSuccess = true;
-			String query = "INSERT INTO users(fname, lname, username, password, credits) " 
-			+ "VALUES(?,?,?,?,?)";
+			String query = "INSERT INTO users(fname, lname, username, password, credits, salt) " 
+			+ "VALUES(?,?,?,?,?,?)";
 			try{
-				
+				String salt = ph.generateSalt();
 				PreparedStatement pstmt = dbc.createPreparedStatement(query);
 				pstmt.setString(1, user.getFname());
 				pstmt.setString(2, user.getLname());
 				pstmt.setString(3, user.getUsername());
-				pstmt.setString(4, password);
+				pstmt.setString(4, ph.hashPassword(password, salt));
 				pstmt.setDouble(5, user.getCredits());
+				pstmt.setString(6, salt);
 				pstmt.executeUpdate();
 				pstmt.close();
 				
@@ -212,6 +217,28 @@ public class UserHelper {
 			
 		}
 		return regSuccess;
+	}
+	
+	public String getUserSalt(String username){
+		String query = "SELECT salt FROM users WHERE username = ?";
+		ResultSet rs = null;
+		String salt = null;
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				salt = rs.getString("salt");
+			}
+			pstmt.close();
+			System.out.println("Getting salt for " + username);
+		}catch(Exception e){
+			e.printStackTrace();
+			return salt;
+		}
+		return salt;
 	}
 	
 }
