@@ -13,6 +13,8 @@ public class PasswordHasher {
 	}
 	
 	public boolean checkPassword(String passFromDb, String passFromUser, String salt){
+		System.out.println(passFromDb);
+		System.out.println(DigestUtils.sha256Hex(passFromUser + salt));
 		return passFromDb.equals(DigestUtils.sha256Hex(passFromUser + salt));
 	}
 }
