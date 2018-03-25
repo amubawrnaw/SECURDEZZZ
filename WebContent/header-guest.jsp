@@ -18,9 +18,6 @@
         <li class="nav-item">
           <a class="nav-link" id="navSignUp">Sign up</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" id="navPMSignUp">PM Sign up</a>
-        </li>
       </ul>
     </div>
   </div>
@@ -39,11 +36,7 @@ $("#navLogin").click(function(){
 $("#navSignUp").click(function(){
     $(this).parent().siblings().removeClass("active");
     $(this).parent().addClass("active");
-    $("#center").load("reg-user.jsp");
+    $("#center").load("register.jsp");
 });
-$("#navPMSignUp").click(function(){
-    $(this).parent().siblings().removeClass("active");
-    $(this).parent().addClass("active");
-    $("#center").load("reg-pm.jsp");
-});
+
 </script>

@@ -9,7 +9,7 @@
     </div>
     <div class="container">
 		<div id="center">
-			<jsp:include page="default.jsp"></jsp:include>
+
 		</div>
     </div>
     

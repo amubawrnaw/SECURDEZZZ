@@ -120,11 +120,16 @@
                         $((imgID).html("<p>" + jsonobj.p_id + "</p>"));  
                         $(cardBody).append(imgID);
                         var imgName = $("<h4>");
-                        imgName.html(jsonobj.name);
+                        imgName.html(jsonobj.name);   
                         $(imgName).addClass("card-title");
-                        cardBody.append(imgName)
+                        $(imgName).addClass("text-center");
+                        var imgPrice = $("<h4>");
+                        imgPrice.html("Price: " + jsonobj.price);       
+                        $(imgPrice).addClass("card-text");
+                        cardBody.append(imgName);
+                        cardBody.append(imgPrice);
                         
-                     card.append(cardBody)
+                     card.append(cardBody);
                      	
                      
                      /*
@@ -143,7 +148,7 @@
                      card.append(photo);
                      */
 
-                         $("#products").append(col);
+                     $("#products").append(col);
                     
 
                  }
