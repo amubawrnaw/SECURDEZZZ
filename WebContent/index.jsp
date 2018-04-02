@@ -27,9 +27,10 @@
                 }else if(person.storeName != null){
                     $('#headerContainer').load("header-pm.jsp");
                 }
-                $("#center").load("default.jsp");
-            });
+                });
+            
         }
+        $("#center").load("default.jsp");
         
     </script>
 </html>

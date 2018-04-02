@@ -3,8 +3,11 @@
 <script>
     $("#btnSubmit").click(function(){
     	var qty = document.getElementById("qty").value;
-        $.post("ProductManagerServlet?param=restock&qty="+qty+"&username="+user+"&prodId="+selectedProduct.p_id,function(obj){
-            $("#center").load("man-prods.jsp");
-        });
+    	if(qty < 0)
+    		alert("Invalid input");
+    	else
+	        $.post("ProductManagerServlet?param=restock&qty="+qty+"&username="+user+"&prodId="+selectedProduct.p_id,function(obj){
+	            $("#center").load("man-prods.jsp");
+	        });
     });
 </script>

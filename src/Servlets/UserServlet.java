@@ -17,6 +17,7 @@ import com.google.gson.GsonBuilder;
 
 import DB.*;
 import Model.User;
+import Model.EmailSender;
 import Model.ProductManager;
 
 /**
@@ -54,22 +55,16 @@ public class UserServlet extends HttpServlet {
 		}else if(param.compareToIgnoreCase("login") == 0){
 			String user = (String) request.getParameter("user").split("&")[0];
 			String pass = (String) request.getParameter("pass").split("&")[0];
-			boolean remember = Boolean.parseBoolean((String)request.getParameter("remembered").split("&")[0]);
+			//boolean remember = Boolean.parseBoolean((String)request.getParameter("remembered").split("&")[0]);
 			try {
 				if(helper.login(user, pass) != null){
 					b = true;
 					Cookie cookie = new Cookie("username", user);
-					if(remember){
-						cookie.setMaxAge(60*60*24*21);
-					}
 					System.out.println("User " + user + " logged in");
 					response.addCookie(cookie);
 				}else if(pmHelper.login(user,pass) != null){
 					b = true;
 					Cookie cookie = new Cookie("username", user);
-					if(remember){
-						cookie.setMaxAge(60*60*24*21);
-					}
 					System.out.println("PM " + user + " logged in");
 					response.addCookie(cookie);
 				}
@@ -125,6 +120,13 @@ public class UserServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 			response.getWriter().write(gson.toJson(credits));
+		}else if (param.compareToIgnoreCase("requestToEdit") == 0){
+			//TODO this checks if the verification code provided by the user is the same as the emailed one
+			String verificationCode = (String) request.getParameter("code").split("&")[0];
+			String username = (String) request.getParameter("user").split("&")[0];
+			boolean isValidCode = helper.confirmPasswordEdit(username, verificationCode);
+			System.out.println(isValidCode);
+			response.getWriter().write(String.valueOf(isValidCode));
 		}
 	}
 
@@ -135,6 +137,7 @@ public class UserServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 			String param = (String) request.getParameter("param").split("&")[0];
 			if(param.compareToIgnoreCase("register") == 0){
+				String email = (String) request.getParameter("user").split("&")[0];
 				String userName = (String) request.getParameter("user").split("&")[0];
 				String pass = (String) request.getParameter("pass").split("&")[0];
 				String fName = (String) request.getParameter("fName").split("&")[0];
@@ -143,7 +146,7 @@ public class UserServlet extends HttpServlet {
 				boolean b = false;
 				System.out.println("Registering user " + userName);
 				try {
-					b = helper.register(user, pass);
+					b = helper.register(email, user, pass);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -158,16 +161,32 @@ public class UserServlet extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}else if (param.compareToIgnoreCase("forgotrequest") == 0){
+				//TODO doing this redirects to verification code page
+				String username = (String) request.getParameter("user").split("&")[0];
+				boolean b = false;
+				try {
+					if(helper.getUserByUsername(username) != null)
+					{
+						helper.requestPasswordEdit(username);
+						Cookie cookie = new Cookie("username", username);
+						response.addCookie(cookie);
+						b = true;
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				response.getWriter().write(String.valueOf(b));
+			}else if (param.compareToIgnoreCase("editPass") == 0){
+				String username = (String) request.getParameter("user").split("&")[0];
+				String password = (String) request.getParameter("password").split("&")[0];
+				helper.editPassword(username, password);
+				System.out.println("Password set");
 			}else if (param.compareToIgnoreCase("edit") == 0){
 				String username = (String) request.getParameter("user").split("&")[0];
-				String newPassword = null;
 				String newFname = null;
 				String newLname = null;
-				
-				if(!(request.getParameter("newPass").split("&")[0].equalsIgnoreCase("none"))){
-					newPassword = (String) request.getParameter("newPass").split("&")[0];
-					System.out.println("Link set");
-				}
 				if(!(request.getParameter("newFname").split("&")[0].equalsIgnoreCase("none"))){
 					newFname = (String) request.getParameter("newFname").split("&")[0];
 					System.out.println("First name set");
@@ -177,10 +196,7 @@ public class UserServlet extends HttpServlet {
 					System.out.println("Last name set");
 				}
 				
-				if((!Objects.isNull(newPassword))){
-					helper.editPassword(username, newPassword);
-					System.out.println("Password updated!");
-				}if((!Objects.isNull(newFname))){
+				if((!Objects.isNull(newFname))){
 					helper.editFirstName(username, newFname);
 					System.out.println("First name updated!");
 				}if((!Objects.isNull(newLname))){

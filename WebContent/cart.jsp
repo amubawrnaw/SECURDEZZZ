@@ -18,6 +18,8 @@
         
         </div>
         <button class = "btn btn-primary top25" id = "delete">Delete</button>
+        <button class = "btn btn-primary top25" id = "editQty">Edit Quantity</button>
+        <input type = "number" id = "newQty"/>
     </div>
     <div class = "col-md-4">
         <h2 id = "balance"></h2>
@@ -62,6 +64,23 @@
         	console.log("Deleting object");
             $("#center").load("cart.jsp");
         });
+    });
+    $("#editQty").click(function(){
+    	var index = $("#items").find(".dselect").children(1).html();
+    	console.log(index);
+    	var quantity = document.getElementById("newQty").value;
+    	console.log("Editing quantity to be " + quantity);
+    	if (quantity == 0)
+    		alert("Delete the product instead");
+    	else{
+    		
+    		$.post("CartServlet?param=addItemToCart&prodId="+jsonarr[index].pid+"&username="+user+"&qty="+quantity, function(obj){
+    			if(obj == 'true')
+    				$("#center").load("cart.jsp");
+    			else
+    				alert("Error");
+    		});
+    	}
     });
     if(user!=null){
         $.get("CartServlet?username="+user,function(obj){
