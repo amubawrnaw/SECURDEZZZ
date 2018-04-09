@@ -1,4 +1,4 @@
-<div class = "row top100">
+<div class = "row mt-4 justify-content-center">
     <div class = "col-md-8">
         <div class = "row">
             <div class = "col-md-3">
@@ -14,12 +14,24 @@
                 <h3>Total</h3>
             </div>
         </div>
-        <div id = 'items'>
-        
+        <div class="row">
+	        <div id = 'items'>
+	        
+	        </div>
         </div>
-        <button class = "btn btn-primary top25" id = "delete">Delete</button>
-        <button class = "btn btn-primary top25" id = "editQty">Edit Quantity</button>
-        <input type = "number" id = "newQty"/>
+        <div class="row no-gutters mt-3">
+        	<div class="col-sm-auto">
+	        	<button class = "btn btn-primary" id = "delete">Delete</button>
+		        <button class = "btn btn-primary" id = "editQty">Edit Quantity</button>
+        	</div>
+        	<div class="col-sm-auto ml-1 mt-1">
+        		<input type = "number" id = "newQty"/>
+        	</div>
+	        
+	        
+        </div>
+        
+        
     </div>
     <div class = "col-md-4">
         <h2 id = "balance"></h2>
