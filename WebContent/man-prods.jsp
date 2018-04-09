@@ -1,26 +1,18 @@
-<div class = "row top100">
+<div class = "row mt-4">
     <div class = "col-md-12" id = "prodList">
-        <div class = "row">
-            <div class = "offset-md-4 col-md-4">
+        <div class = "row justify-content-center">
+            <div class = "col-md-8">
                 <div class = "row">
-                    <div class = "col-md-3">
+                    <div class = "col">
                         <button id = "Add" class = "btn btn-primary">Add</button>
-                    </div>
-                    <div class = "col-md-3">
                         <button id = "Edit" class = "btn btn-primary">Edit</button>
-                    </div>
-                    <div class = "col-md-3">
                         <button id = "Restock" class = "btn btn-primary">Restock</button>
-                    </div>
-                    <div class = "col-md-3">
                         <button id = "Delete" class = "btn btn-primary">Delete</button>
                     </div>
                 </div>
                 <div id = "options" class = "top50">
                 </div>
-            </div>
-            
-            
+            </div>      
         </div>
     </div>
 </div>
