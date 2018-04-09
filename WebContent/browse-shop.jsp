@@ -4,7 +4,7 @@
 
         <div class="col-lg-3">
 
-          <h1 class="my-4">XD Shop</h1>
+          <h1 class="my-4">XD Shopp</h1>
           <form>
           	<div class="form-group">
           		<label for="searchInput">Search</label>

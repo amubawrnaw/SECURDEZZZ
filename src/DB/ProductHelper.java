@@ -196,7 +196,7 @@ public class ProductHelper {
 	}
 	
 	public Product[] getAllProducts(){
-		String query = "SELECT * FROM product AND removed = 0";
+		String query = "SELECT * FROM product WHERE removed = 0";
 		return getProductArr(query);
 	}
 }
