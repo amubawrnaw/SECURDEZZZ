@@ -137,7 +137,7 @@ public class ProductHelper {
 	}
 	
 	public boolean deleteProduct(int id, int manager){
-		String query = "DELETE FROM product WHERE prod_id = ? AND p_manager = ?";
+		String query = "UPDATE product SET removed = 1 WHERE p_manager = ? AND prod_id = ?";
 		try{
 			PreparedStatement pstmt = dbc.createPreparedStatement(query);
 			
@@ -154,18 +154,35 @@ public class ProductHelper {
 		return true;
 	}
 	
+	public boolean readdProduct(int id, int manager){
+		String query = "UPDATE product SET removed = 0 WHERE p_manager = ? AND prod_id = ?";
+		try{
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setInt(1, id);
+			pstmt.setInt(2, manager);
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+			System.out.println("Product deleted!");
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	return true;
+}
 	public Product[] searchProducts(String searchName){
-		String query = "SELECT * FROM product WHERE prod_name LIKE '%"+searchName+"%'";
+		String query = "SELECT * FROM product WHERE prod_name LIKE '%"+searchName+"%' AND removed = 0";
 		return getProductArr(query);
 	}
 	
 	public Product[] getProductsByManagerId(int prodManagerId){
-		String query = "SELECT * FROM product WHERE p_manager = '"+prodManagerId+"'";
+		String query = "SELECT * FROM product WHERE p_manager = '"+prodManagerId+"' AND removed = 0";
 		return getProductArr(query);
 	}
 	
 	public Product getProductById(int id) throws SQLException{
-		String query = "SELECT * FROM product WHERE prod_id = " + id;
+		String query = "SELECT * FROM product WHERE prod_id = " + id + " AND removed = 0";
 		ResultSet rs = dbc.executeQuery(query);
 		Product p = null;
 		if(rs.next())
@@ -174,12 +191,12 @@ public class ProductHelper {
 	}
 	
 	public Product[] getProductsByPrice(int start, int end){
-		String query = "SELECT * FROM product WHERE price >= " + start + " AND price <= " + end;
+		String query = "SELECT * FROM product WHERE price >= " + start + " AND price <= " + end + " AND removed = 0";
 		return getProductArr(query);
 	}
 	
 	public Product[] getAllProducts(){
-		String query = "SELECT * FROM product";
+		String query = "SELECT * FROM product AND removed = 0";
 		return getProductArr(query);
 	}
 }

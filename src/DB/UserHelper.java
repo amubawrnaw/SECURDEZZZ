@@ -46,6 +46,41 @@ public class UserHelper {
 		return u;
 	}
 	
+	public User getUserByToken(String token){
+		String query = "SELECT * FROM tokens WHERE id_tokens = ?";
+		System.out.println(token);
+		User u = null;
+		try{
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			pstmt.setString(1, token);
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			u = getUserByUsername(rs.getString("username"));
+			
+			pstmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return u;
+	}
+	
+	public String createUserToken(String username){
+		String query = "INSERT INTO tokens(id_tokens, username) VALUES(?,?)";
+		String t = null;
+		try{
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			t = ph.generateSalt();
+			pstmt.setString(1, t);
+			pstmt.setString(2, username);
+			
+			pstmt.executeUpdate();
+			pstmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return t;
+	}
+	
 	public int getUserIdByUsername(String username)throws SQLException{
 		String query = "SELECT user_id FROM users WHERE username = ?";
 		System.out.println(username);
@@ -76,7 +111,6 @@ public class UserHelper {
 		ResultSet rs = null;
 		String email = null;
 		try{
-			
 			PreparedStatement pstmt = dbc.createPreparedStatement(query);
 			
 			pstmt.setString(1, username);
