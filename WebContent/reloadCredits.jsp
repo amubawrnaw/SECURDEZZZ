@@ -15,8 +15,11 @@
 	});
 	$("body").on('click', '#reload', function(){
 		var amount = document.getElementById("numCredits").value;
-		$.post("UserServlet?param=reload&user="+username+"&amount="+amount, function(obj){
-			$("#center").load("account.jsp");
-		})
+		if(amount < 0)
+			alert("Invalid Input");
+		else
+			$.post("UserServlet?param=reload&user="+username+"&amount="+amount, function(obj){
+				$("#center").load("account.jsp");
+			})
 	});
 </script>

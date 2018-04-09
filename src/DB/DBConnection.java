@@ -4,9 +4,9 @@ import java.sql.*;
 public class DBConnection {
 	private String	driverName	= "com.mysql.jdbc.Driver";
 	private String	url		= "jdbc:mysql://localhost:3306/";
-	private String	database	= "securde";
+	private String	database	= "securdb";
 	private String	username	= "root";
-	private String	password	= "Mykimobae!1";
+	private String	password	= "1234";
 	public Connection getConnection() {
 		
 		try {

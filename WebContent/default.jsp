@@ -17,7 +17,7 @@
          addPhotos(obj);
      });
     $("#searchBtn").click(function(){
-        var search = $("#search").val();
+        var search = htmlEscape($("#search").val());
         $.get("ProductServlet?param=search&searchString="+search, function(obj){
             addPhotos(obj);
         });

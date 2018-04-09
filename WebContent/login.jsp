@@ -9,9 +9,9 @@
     $("#btnSubmit").click(function(){
         console.log("Hehe");
         var chec = 'false';
-        var user = document.getElementById("usernameInput").value;
-        var pass = document.getElementById("passwordInput").value;
-        var path = "UserServlet?user="+user+"&pass="+pass+"&remembered="+chec+"&param=login";
+        var user = htmlEscape(document.getElementById("usernameInput").value);
+        var pass = htmlEscape(document.getElementById("passwordInput").value);
+        var path = "UserServlet?user="+user+"&pass="+pass+"&param=login";
 
         $.get(path,function(obj){
             console.log(obj);

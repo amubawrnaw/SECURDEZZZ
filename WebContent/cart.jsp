@@ -18,6 +18,8 @@
         
         </div>
         <button class = "btn btn-primary top25" id = "delete">Delete</button>
+        <button class = "btn btn-primary top25" id = "editQty">Edit Quantity</button>
+        <input type = "number" id = "newQty"/>
     </div>
     <div class = "col-md-4">
         <h2 id = "balance"></h2>
@@ -42,13 +44,14 @@
     	var address = document.getElementById("address").value;
     	if (address != '')
 	        $.post("CartServlet?param=checkOutCart&username="+user+"&address="+address, function(obj){
+                console.log(obj);
 	        	if(obj == 'true'){
 	        		console.log("Cart checked out");
 	        		$("#center").load("index.jsp");
 	        	}       		
 	        	else{
 	        		alert("Insufficient Funds, please reload");
-	        		$("#center").load("reload.jsp");
+	        		$("#center").load("reloadCredits.jsp");
 	        	}	
 	        });
     	else
@@ -62,6 +65,23 @@
             $("#center").load("cart.jsp");
         });
     });
+    $("#editQty").click(function(){
+    	var index = $("#items").find(".dselect").children(1).html();
+    	console.log(index);
+    	var quantity = document.getElementById("newQty").value;
+    	console.log("Editing quantity to be " + quantity);
+    	if (quantity == 0)
+    		alert("Delete the product instead");
+    	else{
+    		
+    		$.post("CartServlet?param=addItemToCart&prodId="+jsonarr[index].pid+"&username="+user+"&qty="+quantity, function(obj){
+    			if(obj == 'true')
+    				$("#center").load("cart.jsp");
+    			else
+    				alert("Error");
+    		});
+    	}
+    });
     if(user!=null){
         $.get("CartServlet?username="+user,function(obj){
             jsonarr = JSON.parse(obj);
@@ -74,7 +94,10 @@
                 });
             }
         });
-        
+        $.get("UserServlet?param=user&user="+user,function(obj){
+            var jason = JSON.parse(obj);
+            $("#balance").html("Balance: P"+jason.credits);
+        });
         function addProductDetails(jason, i, obj){
         	var prod = JSON.parse(obj)[0];
             var row = $("<div>");

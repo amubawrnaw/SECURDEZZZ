@@ -4,6 +4,7 @@
     <link href="css/custom.css" rel="stylesheet">
     <script src="frameworks/jquery/jquery.min.js"></script>
     <script src="frameworks/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src = "javascript/htmlEscape.js"></script>
     <div id = "headerContainer">
         <jsp:include page="header-guest.jsp"></jsp:include>
     </div>
@@ -27,9 +28,10 @@
                 }else if(person.storeName != null){
                     $('#headerContainer').load("header-pm.jsp");
                 }
-                $("#center").load("default.jsp");
-            });
+                });
+            
         }
+        $("#center").load("default.jsp");
         
     </script>
 </html>

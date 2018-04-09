@@ -6,15 +6,20 @@
     $("#Name").val(selectedProduct.name);
     $("#Image").val(selectedProduct.img_link);
     $("#Price").val(selectedProduct.price);
-    
     $("#btnSubmit").click(function(){
-        var Name = $("#Name").val();
-        var Image = $("#Image").val();
-        var Price = $("#Price").val();
+    	var Name = htmlEscape($("#Name").val());
+
+        var Image = htmlEscape($("#Image").val());
+
+        var Price = htmlEscape($("#Price").val());
+        
         var Quantity = $("#Quantity").val();
         
-        $.post("ProductManagerServlet?param=edit&name="+Name+"&price="+Price+"&imgLink="+Image+"&username="+user+"&prodId="+selectedProduct.p_id,function(obj){
-            $("#center").load("man-prods.jsp");
+        if(Quantity < 0 || Price < 0)
+        	alert("Invalid input");
+        else
+			$.post("ProductManagerServlet?param=edit&name="+Name+"&price="+Price+"&imgLink="+Image+"&username="+user+"&prodId="+selectedProduct.p_id,function(obj){
+           		$("#center").load("man-prods.jsp");
         });
     });
 </script>
