@@ -8,8 +8,11 @@
         <jsp:include page="header-guest.jsp"></jsp:include>
     </div>
     <div class="container">
+    	<!-- For testing purposes. Comment out when not used. -->
+    	<jsp:include page="forgot-pass.jsp"></jsp:include>
+    	
 		<div id="center">
-
+			
 		</div>
     </div>
     
