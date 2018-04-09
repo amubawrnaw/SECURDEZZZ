@@ -4,36 +4,12 @@
 <input type="number" class="form-control" id="Quantity" placeholder="Quantity">
 <button type="button" class="btn btn-primary" id="btnSubmit">Submit</button>
 <script>
-	$("#Name").keypress(function(event){
-	    var ew = event.which;
-	    if(ew == 32)
-	        return true;
-	    if(48 <= ew && ew <= 57)
-	        return true;
-	    if(65 <= ew && ew <= 90)
-	        return true;
-	    if(97 <= ew && ew <= 122)
-	        return true;
-	    return false;
-	});
-	$("#Image").keypress(function(event){
-	    var ew = event.which;
-	    if(ew == 32)
-	        return true;
-	    if(48 <= ew && ew <= 57)
-	        return true;
-	    if(65 <= ew && ew <= 90)
-	        return true;
-	    if(97 <= ew && ew <= 122)
-	        return true;
-	    return false;
-	});
     $("#btnSubmit").click(function(){
-        var Name = $("#Name").val();
+        var Name = htmlEscape($("#Name").val());
 
-        var Image = $("#Image").val()
+        var Image = htmlEscape($("#Image").val());
         
-        var Price = $("#Price").val()
+        var Price = htmlEscape($("#Price").val());
         
         var Quantity = $("#Quantity").val();
         if(Quantity < 0 || Price < 0)

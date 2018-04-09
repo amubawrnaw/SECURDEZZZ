@@ -281,10 +281,10 @@ public class UserHelper {
 			
 			pstmt.setString(1, username);
 			rs = pstmt.executeQuery();
-			pstmt.close();
 			if(rs.next()){
 				val = rs.getDouble("credits");
 			}
+			pstmt.close();
 			System.out.println("Getting credits for " + username);
 		}catch(Exception e){
 			e.printStackTrace();
