@@ -3,6 +3,7 @@
 		<h1>Product Manager Sign-up</h1>
 	</div>
 </div>
+<!-- pucha -->
 <div class = "row mt-2">
     <div class = "offset-md-4 col-md-4">
         <input type="text" class="form-control" id="storename" placeholder="Store Name">
