@@ -5,7 +5,7 @@ public class DBConnection {
 	private String	driverName	= "com.mysql.jdbc.Driver";
 	private String	url		= "jdbc:mysql://localhost:3306/";
 	private String	database	= "securdb";
-	private String	username	= "root";
+	private String	username	= "root";	
 	private String	password	= "1234";
 	public Connection getConnection() {
 		

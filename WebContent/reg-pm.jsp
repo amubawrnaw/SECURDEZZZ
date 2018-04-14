@@ -9,7 +9,7 @@
         <input type="text" class="form-control" id="usernameInput" placeholder="Username">
         <input type="password" class="form-control" id="passwordInput" placeholder="Password">
         <label>Password must be atleast 8 characters, with atleast 1 of each: lowercase, uppercase, and special character</label>
-        <button type="button" class="btn btn-primary" id="btnSubmit">Submit</button>
+        <button type="button" class="btn btn-primary float-right" id="btnSubmit">Submit</button>
     </div>
 </div>
 <script>

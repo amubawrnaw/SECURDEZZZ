@@ -24,13 +24,13 @@
               <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
             </ol>
             <div class="carousel-inner" role="listbox">
-              <div class="carousel-item active">
-                <img class="d-block img-fluid" src="http://www.keithdkennedy.com/wp-content/uploads/2015/01/alienware-banner-dell.jpg" alt="First slide">
+              <div class="carousel-item active" style="height: 225px; max-height:225px;">
+                <img class="d-block img-fluid" src="http://www.factmalta.com/wp-content/uploads/2018/02/apple-watch-web-banner.png" alt="First slide">
               </div>
-              <div class="carousel-item">
+              <div class="carousel-item" style="height: 225px; max-height:225px;">
                 <img class="d-block img-fluid" src="https://www.evetech.co.za/repository/ProductImages/asus-rog-g752vl-gaming-laptops-banner-730px-v1.jpg" alt="Second slide">
               </div>
-              <div class="carousel-item">
+              <div class="carousel-item" style="height: 225px; max-height:225px;">
                 <img class="d-block img-fluid" src="https://www.primeabgb.com/wp-content/uploads/2016/06/intel-price-banner.jpg" alt="Third slide">
               </div>
             </div>
