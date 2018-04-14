@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
-
+import java.util.ArrayList;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import Model.ProductManager;
@@ -46,6 +46,29 @@ public class UserHelper {
 		return u;
 	}
 	
+	public String getAdminByUsername(String username) throws SQLException{	
+		String query = "SELECT * FROM admin WHERE username = ?";
+		ResultSet rs = null;
+		String admin = null;
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				admin = rs.getString("username");
+			}
+			pstmt.close();
+			
+			System.out.println("Admin with username " + username + " found");
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+
+		return admin;
+	}
 	public User getUserByToken(String token){
 		String query = "SELECT * FROM tokens WHERE id_tokens = ?";
 		System.out.println(token);
@@ -128,9 +151,115 @@ public class UserHelper {
 		}	
 		return email;
 	}
+	
+	public String loginAdmin(String adminUsername, String password){
+		String checkIfAdminExists = "SELECT * FROM admin WHERE username = ?";
+		String adminUser = null;
+		ResultSet rs = null;
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(checkIfAdminExists);
+			
+			pstmt.setString(1, adminUsername);
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				System.out.println(rs.getString("password"));
+				if(ph.checkPassword(rs.getString("password"), password, getAdminSalt(adminUsername)))
+					adminUser = rs.getString("username");
+			}
+			pstmt.close();
+			
+			System.out.println("Admin with username " + adminUsername + " found");
+		}catch(Exception e){
+			e.printStackTrace();
+			return adminUser;
+		}
+		return adminUser;
+	}
+	
+	public void banUser(String adminUsername, String userToBeBanned, String reason, String password) {
+		System.out.println("Banning user " + userToBeBanned + " being banned by " + adminUsername);
+		boolean adminExists = Objects.nonNull(loginAdmin(adminUsername, password));
+		String query = "UPDATE users SET banned = ? WHERE username = ?";
+		if(adminExists){
+			try{
+				PreparedStatement pstmt = dbc.createPreparedStatement(query);
+				pstmt.setInt(1, 1);
+				pstmt.setString(2, userToBeBanned);
+				pstmt.executeUpdate();
+				pstmt.close();
+				
+				System.out.println("User " + userToBeBanned + " banned!");
+			}catch(Exception e){
+				e.printStackTrace();
+				return;
+			}
+			String email = null;
+			try {
+				email = getUserEmailByUsername(userToBeBanned);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			EmailSender es = new EmailSender();
+			es.sendBanReason(email, reason);
+		}
+	}
+	
+	public void unBanUser(String adminUsername, String userToBeBanned, String reason, String password) {
+		System.out.println("Unbanning user " + userToBeBanned + " being banned by " + adminUsername);
+		boolean adminExists = Objects.nonNull(loginAdmin(adminUsername, password));
+		String query = "UPDATE users SET banned = ? WHERE username = ?";
+		if(adminExists){
+			try{
+				PreparedStatement pstmt = dbc.createPreparedStatement(query);
+				pstmt.setInt(1, 0);
+				pstmt.setString(2, userToBeBanned);
+				pstmt.executeUpdate();
+				pstmt.close();
+				
+				System.out.println("User " + userToBeBanned + " unbanned!");
+			}catch(Exception e){
+				e.printStackTrace();
+				return;
+			}
+			String email = null;
+			try {
+				email = getUserEmailByUsername(userToBeBanned);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			EmailSender es = new EmailSender();
+			es.sendunBanReason(email, reason);
+		}
+	}
+	
+	public ArrayList<String> getAllUsers(){
+		System.out.println("Getting all users");
+		String query = "SELECT * FROM users";
+		ResultSet rs = null;
+		User u = null;
+		ArrayList<String> userList = new ArrayList<String>();
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				String username = rs.getString("username");
+				userList.add(username);
+			}
+			pstmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+		return userList;
+	}
 	public User login(String username, String password) throws SQLException{
 		System.out.println("Logging in user " + username);
-		String query = "SELECT * FROM users WHERE username = ?";
+		String query = "SELECT * FROM users WHERE username = ? AND banned = ?";
 		ResultSet rs = null;
 		User u = null;
 		try{
@@ -138,6 +267,7 @@ public class UserHelper {
 			PreparedStatement pstmt = dbc.createPreparedStatement(query);
 			
 			pstmt.setString(1, username);
+			pstmt.setInt(2, 0);
 			rs = pstmt.executeQuery();
 			if(rs.next()){
 				System.out.println(rs.getString("password"));
@@ -179,7 +309,7 @@ public class UserHelper {
 			e.printStackTrace();
 		}
 		EmailSender es = new EmailSender();
-		es.sendTo(email, verificationCode);
+		es.sendForgotPasswordEmail(email, verificationCode);
 		return true;
 	}
 	
@@ -361,6 +491,52 @@ public class UserHelper {
 			return salt;
 		}
 		return salt;
+	}
+	
+	public String getAdminSalt(String username){
+		String query = "SELECT salt FROM admin WHERE username = ?";
+		ResultSet rs = null;
+		String salt = null;
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				salt = rs.getString("salt");
+			}
+			pstmt.close();
+			System.out.println("Getting salt for " + username);
+		}catch(Exception e){
+			e.printStackTrace();
+			return salt;
+		}
+		return salt;
+	}
+
+	public boolean getBannedStatus(String user) {
+		String query = "SELECT banned FROM users WHERE username = ?";
+		ResultSet rs = null;
+		boolean status = false;
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, user);
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				int banned = rs.getInt("banned");
+				if(banned == 1)
+					status = true;
+			}
+			pstmt.close();
+			System.out.println("Getting status for " + user);
+		}catch(Exception e){
+			e.printStackTrace();
+			return status;
+		}
+		return status;
 	}
 	
 }

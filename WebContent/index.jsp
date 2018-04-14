@@ -26,11 +26,13 @@
         if (name_or_null != null){
             $.get("UserServlet?user=" + name_or_null + "&param=user", function(obj){
                 var person = JSON.parse(obj);
-                console.log(person);
+                console.log(person.adminUsername);
                 if (person.fname != null){
                     $('#headerContainer').load("header-user.jsp");
                 }else if(person.storeName != null){
                     $('#headerContainer').load("header-pm.jsp");
+                }else if (person.adminUsername != null){
+                	console.log("I'm an admin god!");
                 }
                 });
             

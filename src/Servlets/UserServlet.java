@@ -17,6 +17,7 @@ import com.google.gson.GsonBuilder;
 
 import DB.*;
 import Model.User;
+import Model.Admin;
 import Model.EmailSender;
 import Model.ProductManager;
 
@@ -67,6 +68,13 @@ public class UserServlet extends HttpServlet {
 					Cookie cookie = new Cookie("username", user);
 					System.out.println("PM " + user + " logged in");
 					response.addCookie(cookie);
+				}else{
+					if(helper.loginAdmin(user, pass) != null)
+					{
+						b = true;
+						Cookie cookie = new Cookie("username", helper.loginAdmin(user, pass));
+						response.addCookie(cookie);
+					}
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -98,6 +106,18 @@ public class UserServlet extends HttpServlet {
 				if (pm != null){
 					System.out.println("Im a Product Manager");
 					response.getWriter().write(gson.toJson(pm));
+				} else {
+					String adminUser = null;
+					try {
+						adminUser = helper.getAdminByUsername(user);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}if (adminUser != null) {
+						System.out.println("I'm an admin!");
+						Admin admin = new Admin(adminUser);
+						response.getWriter().write(gson.toJson(admin));
+					}
 				}
 			}
 			
@@ -127,6 +147,8 @@ public class UserServlet extends HttpServlet {
 			boolean isValidCode = helper.confirmPasswordEdit(username, verificationCode);
 			System.out.println(isValidCode);
 			response.getWriter().write(String.valueOf(isValidCode));
+		}else if (param.compareToIgnoreCase("getAllUser") == 0){
+			response.getWriter().write(gson.toJson(helper.getAllUsers()));
 		}
 	}
 
@@ -136,6 +158,7 @@ public class UserServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 			String param = (String) request.getParameter("param").split("&")[0];
+			System.out.println(param);
 			if(param.compareToIgnoreCase("register") == 0){
 				String email = (String) request.getParameter("user").split("&")[0];
 				String userName = (String) request.getParameter("user").split("&")[0];
@@ -203,6 +226,16 @@ public class UserServlet extends HttpServlet {
 					helper.editLastName(username, newLname);
 					System.out.println("Last name updated!");
 				}
+			}else if (param.compareToIgnoreCase("ban") == 0){
+				String user = (String) request.getParameter("user").split("&")[0];
+				String adminUsername = (String) request.getParameter("admin").split("&")[0];
+				String reason = (String) request.getParameter("reason").split("&")[0];
+				String password = (String) request.getParameter("password").split("&")[0];
+				boolean isBanned = helper.getBannedStatus(user);
+				if(isBanned)
+					helper.unBanUser(adminUsername, user, reason, password);
+				else
+					helper.banUser(adminUsername, user, reason, password);
 			}
 	}
 

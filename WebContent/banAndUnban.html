@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<label>Ban or Unban user: </label>
+	<input type = "text" id = "username"/>
+	<br>
+	<label>Reason: </label>
+	<input type = "text" id = "reason"/>
+	<br>
+	<label>Validate credentials: </label>
+	<br>
+	<label>Admin Username: </label>
+	<input type = "text" id = "adminUsername"/>
+	<br>
+	<label>Password: </label>
+	<input type = "password" id = "password"/>
+	<br>
+	<button id = "submit">BOOM</button>
+</body>
+<script src = "javascript/htmlEscape.js"></script>
+<script src="frameworks/jquery/jquery.min.js"></script>
+<script src = "javascript/htmlEscape.js"></script>
+<script>
+	function createPOSTRequest(admin, adminCheck){
+		console.log(adminCheck);
+		if(adminCheck == true)
+		{
+			console.log("Ayy we here");
+			var user = document.getElementById("username").value;
+			var reason = document.getElementById("reason").value;
+			var password = document.getElementById("password").value;
+			$.post("UserServlet?param=ban&admin="+admin+"&user="+user+"&reason="+reason+"&password="+password);
+		}
+	}
+	$.get("UserServlet?param=getAllUser", function(obj){
+		console.log(obj);
+	})
+	$("#submit").click(function(){
+		console.log("Submitted");
+		var admin = document.getElementById("adminUsername").value;
+		var name_or_null = document.cookie.split("=")[1];
+		console.log(name_or_null + " " + admin);
+		var adminCheck = false;
+		if (admin == name_or_null){
+			console.log("in here");
+			$.get("UserServlet?user=" + name_or_null + "&param=user", function(obj){
+	            var person = JSON.parse(obj);
+	            console.log(person.adminUsername);
+	            if (person.adminUsername != null){
+	            	console.log("I'm an admin god! Admincheck = true!");
+	            	adminCheck = true;
+	            	console.log(adminCheck);
+	            	createPOSTRequest(admin, adminCheck);
+	            }
+	        });
+		}
+		
+	});
+	
+</script>
+</html>
