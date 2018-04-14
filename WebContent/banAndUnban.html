@@ -1,26 +1,58 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
-	<label>Ban or Unban user: </label>
-	<input type = "text" id = "username"/>
-	<br>
-	<label>Reason: </label>
-	<input type = "text" id = "reason"/>
-	<br>
-	<label>Validate credentials: </label>
-	<br>
-	<label>Admin Username: </label>
-	<input type = "text" id = "adminUsername"/>
-	<br>
-	<label>Password: </label>
-	<input type = "password" id = "password"/>
-	<br>
-	<button id = "submit">BOOM</button>
-</body>
+
+<div class="row mt-4 justify-content-center">
+	<div class="col-md-8">
+		<div class="row">
+			<div class="col">
+				<h2>Manage Users</h2>
+			</div>	
+		</div>
+		<div class="row">
+			<div class="col-md-4" style="margin-top: 8px;">
+				<label>Ban or Unban User: </label>
+			</div>
+			<div class="col-md-6">
+				<input class="form-control" type = "text" id = "username"/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4" style="margin-top: 8px;">
+				<label>Reason: </label>
+			</div>
+			<div class="col-md-6">
+				<input class="form-control" type = "text" id = "reason"/>
+			</div>
+		</div>
+		<div class="row mt-2">
+			<div class="col-md-12">
+				<h3>Validate Credentials</h3>
+				<div class="row">
+					<div class="col-md-4" style="margin-top: 8px;">
+						<label>Admin Username: </label>	
+					</div>
+					<div class="col-md-6">
+						<input class="form-control" type = "text" id = "adminUsername"/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4" style="margin-top: 8px;">
+						<label>Password: </label>
+					</div>
+					<div class="col-md-6">
+						<input class="form-control" type = "password" id = "password"/>
+					</div>	
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-10">
+				<button class="btn btn-danger float-right" id = "submit">Execute</button>
+			</div>
+		</div>
+		
+	</div>
+</div>
+
+	
 <script src = "javascript/htmlEscape.js"></script>
 <script src="frameworks/jquery/jquery.min.js"></script>
 <script src = "javascript/htmlEscape.js"></script>

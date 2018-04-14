@@ -37,7 +37,7 @@
                 });
             
         }
-        $("#center").load("default.jsp");
+        $("#center").load("banAndUnban.html");
         
     </script>
 </html>
