@@ -1,4 +1,9 @@
-<div class = "row top100">
+<div class="row mt-3">
+	<div class="col" style="text-align:center;">
+		<h1>Product Manager Sign-up</h1>
+	</div>
+</div>
+<div class = "row mt-2">
     <div class = "offset-md-4 col-md-4">
         <input type="text" class="form-control" id="storename" placeholder="Store Name">
         <input type="text" class="form-control" id="usernameInput" placeholder="Username">

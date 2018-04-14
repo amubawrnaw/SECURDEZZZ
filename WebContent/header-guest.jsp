@@ -15,12 +15,21 @@
         <li class="nav-item">
           <a class="nav-link" id="navLogin">Login</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item dropdown">
+        	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	          Sign up
+	        </a>
+	        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+	          <a class="dropdown-item nav-link" id="navSignUp" style="color: black;">Sign up as User</a>
+	          <a class="dropdown-item nav-link" id="navPMSignUp" style="color: black;">Sign up as PM</a>
+	        </div>
+        </li>
+        <!-- <li class="nav-item">
           <a class="nav-link" id="navSignUp">Sign up</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="navPMSignUp">PM Sign up</a>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
