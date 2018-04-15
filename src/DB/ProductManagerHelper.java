@@ -336,4 +336,55 @@ public class ProductManagerHelper {
 		}
 		return salt;
 	}
+	
+	public String getProdNameByToken(String token){
+		String query = "SELECT prod_man FROM tokens WHERE id_tokens = ?";
+		System.out.println(token);
+		String s = null;
+		try{
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			pstmt.setString(1, token);
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			s = rs.getString("prod_man");
+			
+			pstmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return s;
+	}
+	
+	public String createProdManToken(String user){
+		String query = "INSERT INTO tokens(id_tokens, prod_man) VALUES(?,?)";
+		String t = null;
+		try{
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			t = ph.generateSalt();
+			pstmt.setString(1, t);
+			pstmt.setString(2, user);
+			System.out.println("Salt:" + t + " created!");
+			pstmt.executeUpdate();
+			pstmt.close();
+		}catch(Exception e){
+			t = null;
+			e.printStackTrace();
+		}
+		return t;
+	}
+	
+	public void removeProdManToken(String token){
+		String query = "DELETE FROM tokens WHERE id_tokens = ?";
+		try{
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1,token);
+			pstmt.executeUpdate();
+			pstmt.close();
+			System.out.println("Salt:" + token + " deleted!");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 }
