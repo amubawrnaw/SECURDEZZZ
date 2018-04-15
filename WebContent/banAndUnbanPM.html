@@ -1,0 +1,109 @@
+
+<div class="row mt-4 justify-content-center">
+	<div class="col-md-8">
+		<div class="row">
+			<div class="col">
+				<h2>Manage Product Managers</h2>
+			</div>	
+		</div>
+		<div class="row">
+			<div class="col-md-4" style="margin-top: 8px;">
+				<label>Ban or Unban User: </label>
+			</div>
+			<div class="col-md-6">
+				<input class="form-control" type = "text" id = "username"/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4" style="margin-top: 8px;">
+				<label>Reason: </label>
+			</div>
+			<div class="col-md-6">
+				<input class="form-control" type = "text" id = "reason"/>
+			</div>
+		</div>
+		<div class="row mt-2">
+			<div class="col-md-12">
+				<h3>Validate Credentials</h3>
+				<div class="row">
+					<div class="col-md-4" style="margin-top: 8px;">
+						<label>Admin Username: </label>	
+					</div>
+					<div class="col-md-6">
+						<input class="form-control" type = "text" id = "adminUsername"/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4" style="margin-top: 8px;">
+						<label>Password: </label>
+					</div>
+					<div class="col-md-6">
+						<input class="form-control" type = "password" id = "password"/>
+					</div>	
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-10">
+				<button class="btn btn-danger float-right" id = "submit">Execute</button>
+			</div>
+		</div>
+		
+	</div>
+</div>
+
+	
+<script src = "javascript/htmlEscape.js"></script>
+<script src="frameworks/jquery/jquery.min.js"></script>
+<script src = "javascript/htmlEscape.js"></script>
+<script>
+	function createPOSTRequest(admin, adminCheck){
+		console.log(adminCheck);
+		if(adminCheck == true)
+		{
+			console.log("Ayy we here");
+			var user = document.getElementById("username").value;
+			var reason = document.getElementById("reason").value;
+			var password = document.getElementById("password").value;
+			$.post("ProductManagerServlet?param=ban&admin="+admin+"&user="+user+"&reason="+reason+"&password="+password);
+		}
+	}
+	$.get("ProductManagerServlet?param=getAllPM", function(obj){
+		var allUsers = JSON.parse(obj);
+		var bannedUsers = [];
+		var unbannedUsers = []
+		for(i = 0; i < allUsers.length; i++){
+			if(allUsers[i].banned == "0")
+				unbannedUsers.push(allUsers[i]);
+			else
+				bannedUsers.push(allUsers[i]);
+		}
+		console.log("unbanned guys ");
+		console.log(unbannedUsers);
+		console.log("banned guys " + bannedUsers);
+		console.log(bannedUsers);
+	})
+	$("#submit").click(function(){
+		console.log("Submitted");
+		var admin = document.getElementById("adminUsername").value;
+		var name_or_null = document.cookie.split("=")[1];
+		console.log(name_or_null + " " + admin);
+		var adminCheck = false;
+		if (admin == name_or_null){
+			console.log("in here");
+			$.get("UserServlet?user=" + name_or_null + "&param=user", function(obj){
+	            var person = JSON.parse(obj);
+	            console.log(person.adminUsername);
+	            if (person.adminUsername != null){
+	            	console.log("I'm an admin god! Admincheck = true!");
+	            	adminCheck = true;
+	            	console.log(adminCheck);
+	            	createPOSTRequest(admin, adminCheck);
+	            }
+	        });
+		}
+		
+	});
+	
+</script>
+</html>

@@ -4,11 +4,13 @@ import java.util.*;
 import java.sql.*;
 
 public class ProductManager {
+	private String email;
 	private String username;
 	private String password;
 	private String fname;
 	private String lname;
 	private String storeName;
+	private int banned;
 	public static final ProductManager empty = new ProductManager();
 	
 	public ProductManager() {
@@ -46,19 +48,37 @@ public class ProductManager {
 	public String getStoreName(){
 		return storeName;
 	}
-
 	
+	public String getEmail(){
+		return email;
+	}
+	
+	public int getBanned(){
+		return banned;
+	}
 	
 	public static ProductManager toProductManager(ResultSet rs){
 		ProductManager pm = new ProductManager();
 		try{
+			pm.setEmail(rs.getString("email"));
 			pm.setUsername(rs.getString("username"));
 			pm.setStoreName(rs.getString("store_name"));
+			pm.setBanned(rs.getInt("banned"));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
 		return pm;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+		
+	}
+
+	public void setBanned(int banned) {
+		this.banned = banned;
+		
 	}
 
 	public void setName(String fName, String lName) {

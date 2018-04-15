@@ -39,10 +39,10 @@ public class ProductManagerServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String param = (String) request.getParameter("param").split("&")[0];
-		String username = (String) request.getParameter("username").split("&")[0];
 		System.out.println(param);
 		if (param.compareToIgnoreCase("getByPM") == 0) 
 		{
+			String username = (String) request.getParameter("user").split("&")[0];
 			Product[] products = null;
 			System.out.println("getByPM");
 			int managerId = -1;
@@ -54,7 +54,9 @@ public class ProductManagerServlet extends HttpServlet {
 			}
 			products = pHelper.getProductsByManagerId(managerId);
 			response.getWriter().write(gson.toJson(products));
-		} else
+		} else if (param.compareToIgnoreCase("getAllPM") == 0){
+			response.getWriter().write(gson.toJson(helper.getAllProductManagers()));
+		}else
 			response.getWriter().write("false");
 	}
 
@@ -62,29 +64,35 @@ public class ProductManagerServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		String param = (String) request.getParameter("param").split("&")[0];
-		//TODO store and get the productManager's ID for literally everything in this servlet
-		String username = (String) request.getParameter("username").split("&")[0];
-		int prodManagerId = -1;
-		try {
-			prodManagerId = helper.getProductManagerIdByUsername(username);
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		//TODO As mentioned above, just 2 TODOs for emphasis
 		System.out.println(param);
 		boolean b = false;
 		
 		if(param.compareToIgnoreCase("restock") == 0)
 		{
+			String username = (String) request.getParameter("username").split("&")[0];
+			int prodManagerId = -1;
+			try {
+				prodManagerId = helper.getProductManagerIdByUsername(username);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			int prodId = Integer.parseInt(request.getParameter("prodId").split("&")[0]);
 			int quantity = Integer.parseInt(request.getParameter("qty").split("&")[0]);
 			b = pHelper.restockProduct(prodId, prodManagerId, quantity);
 		}
 		else if (param.compareToIgnoreCase("add") == 0)
 		{
+			String username = (String) request.getParameter("username").split("&")[0];
+			int prodManagerId = -1;
+			try {
+				prodManagerId = helper.getProductManagerIdByUsername(username);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			String name = (String) request.getParameter("name").split("&")[0];
 			double price = Double.parseDouble((String) request.getParameter("price").split("&")[0]);
 			int quantity = Integer.parseInt(request.getParameter("qty").split("&")[0]);
@@ -94,12 +102,28 @@ public class ProductManagerServlet extends HttpServlet {
 		
 		else if (param.compareToIgnoreCase("delete") == 0)
 		{
+			String username = (String) request.getParameter("username").split("&")[0];
+			int prodManagerId = -1;
+			try {
+				prodManagerId = helper.getProductManagerIdByUsername(username);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			int prodId = Integer.parseInt(request.getParameter("prodId").split("&")[0]);
 			b = pHelper.deleteProduct(prodId, prodManagerId);
 		}
 		
 		else if (param.compareToIgnoreCase("edit") == 0)
 		{
+			String username = (String) request.getParameter("username").split("&")[0];
+			int prodManagerId = -1;
+			try {
+				prodManagerId = helper.getProductManagerIdByUsername(username);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			int managerId = -1;
 			try {
 				managerId = helper.getProductManagerIdByUsername(username);
@@ -150,6 +174,16 @@ public class ProductManagerServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else if (param.compareToIgnoreCase("ban") == 0){
+			String user = (String) request.getParameter("user").split("&")[0];
+			String adminUsername = (String) request.getParameter("admin").split("&")[0];
+			String reason = (String) request.getParameter("reason").split("&")[0];
+			String password = (String) request.getParameter("password").split("&")[0];
+			boolean isBanned = helper.getBannedStatus(user);
+			if(isBanned)
+				helper.unBanPM(adminUsername, user, reason, password);
+			else
+				helper.banPM(adminUsername, user, reason, password);
 		}
 		response.getWriter().write(String.valueOf(b));
 		

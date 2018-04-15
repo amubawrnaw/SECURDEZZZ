@@ -7,6 +7,7 @@ import java.util.Objects;
 import Model.Product;
 import Model.ProductManager;
 import Model.User;
+import Model.EmailSender;
 import Model.PasswordHasher;
 
 public class ProductManagerHelper {
@@ -17,6 +18,178 @@ public class ProductManagerHelper {
 		ph = new PasswordHasher();
 	}
 	
+	public ArrayList<ProductManager> getAllProductManagers(){
+		System.out.println("Getting all product managers");
+		String query = "SELECT * FROM product_manager";
+		ResultSet rs = null;
+		ArrayList<ProductManager> pmList = new ArrayList<ProductManager>();
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				pmList.add(ProductManager.toProductManager(rs));
+			}
+			pstmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+		return pmList;
+	}
+	
+	public boolean getBannedStatus(String user) {
+		String query = "SELECT banned FROM product_manager WHERE username = ?";
+		ResultSet rs = null;
+		boolean status = false;
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, user);
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				int banned = rs.getInt("banned");
+				if(banned == 1)
+					status = true;
+			}
+			pstmt.close();
+			System.out.println("Getting status for " + user);
+		}catch(Exception e){
+			e.printStackTrace();
+			return status;
+		}
+		return status;
+	}
+	
+	public String getPMEmailByUsername(String username)throws SQLException{
+		String query = "SELECT email FROM product_manager WHERE username = ?";
+		System.out.println(username);
+		ResultSet rs = null;
+		String email = null;
+		try{
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()){
+				email = rs.getString("email");
+			}
+			pstmt.close();
+			
+			System.out.println("PM with username " + username + " found, returning email");
+		}catch(Exception e){
+			e.printStackTrace();
+			return email;
+		}	
+		return email;
+	}
+	
+	public void banPM(String adminUsername, String userToBeBanned, String reason, String password) {
+		System.out.println("Banning user " + userToBeBanned + " being banned by " + adminUsername);
+		boolean adminExists = Objects.nonNull(loginAdmin(adminUsername, password));
+		String query = "UPDATE product_manager SET banned = ? WHERE username = ?";
+		if(adminExists){
+			try{
+				PreparedStatement pstmt = dbc.createPreparedStatement(query);
+				pstmt.setInt(1, 1);
+				pstmt.setString(2, userToBeBanned);
+				pstmt.executeUpdate();
+				pstmt.close();
+				
+				System.out.println("User " + userToBeBanned + " banned!");
+			}catch(Exception e){
+				e.printStackTrace();
+				return;
+			}
+			String email = null;
+			try {
+				email = getPMEmailByUsername(userToBeBanned);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			EmailSender es = new EmailSender();
+			es.sendBanReason(email, reason);
+		}
+	}
+	
+	public void unBanPM(String adminUsername, String userToBeBanned, String reason, String password) {
+		System.out.println("Unbanning user " + userToBeBanned + " being banned by " + adminUsername);
+		boolean adminExists = Objects.nonNull(loginAdmin(adminUsername, password));
+		String query = "UPDATE product_manager SET banned = ? WHERE username = ?";
+		if(adminExists){
+			try{
+				PreparedStatement pstmt = dbc.createPreparedStatement(query);
+				pstmt.setInt(1, 0);
+				pstmt.setString(2, userToBeBanned);
+				pstmt.executeUpdate();
+				pstmt.close();
+				
+				System.out.println("User " + userToBeBanned + " unbanned!");
+			}catch(Exception e){
+				e.printStackTrace();
+				return;
+			}
+			String email = null;
+			try {
+				email = getPMEmailByUsername(userToBeBanned);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			EmailSender es = new EmailSender();
+			es.sendunBanReason(email, reason);
+		}
+	}
+	
+	public String loginAdmin(String adminUsername, String password){
+		String checkIfAdminExists = "SELECT * FROM admin WHERE username = ?";
+		String adminUser = null;
+		ResultSet rs = null;
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(checkIfAdminExists);
+			
+			pstmt.setString(1, adminUsername);
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				System.out.println(rs.getString("password"));
+				if(ph.checkPassword(rs.getString("password"), password, getAdminSalt(adminUsername)))
+					adminUser = rs.getString("username");
+			}
+			pstmt.close();
+			
+			System.out.println("Admin with username " + adminUsername + " found");
+		}catch(Exception e){
+			e.printStackTrace();
+			return adminUser;
+		}
+		return adminUser;
+	}
+	public String getAdminSalt(String username){
+		String query = "SELECT salt FROM admin WHERE username = ?";
+		ResultSet rs = null;
+		String salt = null;
+		try{
+			
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				salt = rs.getString("salt");
+			}
+			pstmt.close();
+			System.out.println("Getting salt for " + username);
+		}catch(Exception e){
+			e.printStackTrace();
+			return salt;
+		}
+		return salt;
+	}
 	public int getProductManagerIdByUsername(String username) throws SQLException {
 		String query = "SELECT prod_man_id FROM product_manager WHERE username = ?";
 		System.out.println(username);
