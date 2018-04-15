@@ -33,6 +33,7 @@
                     $('#headerContainer').load("header-pm.jsp");
                 }else if (person.adminUsername != null){
                 	console.log("I'm an admin god!");
+                	$('#headerContainer').load("header-admin.jsp");
                 }
                 });
             
