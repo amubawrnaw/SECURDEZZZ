@@ -8,6 +8,7 @@ public class User {
 	private Double credits;
 	private String fname;
 	private String lname;
+	private int banned;
 	public static final User empty = new User();
 
 	public User() {
@@ -32,6 +33,9 @@ public class User {
 	public void setLname(String lname){
 		this.lname = lname;
 	}
+	public void setBanned(int banned){
+		this.banned = banned;
+	}
 
 	public String getUsername(){
 		return username;
@@ -44,6 +48,9 @@ public class User {
 	}
 	public String getLname(){
 		return lname;
+	}
+	public int getBanned(){
+		return banned;
 	}
 
 	public String toJSONformat(){
@@ -58,6 +65,7 @@ public class User {
 			u.setLname(rs.getString("lname"));
 			u.setUsername(rs.getString("username"));
 			u.setCredits(rs.getDouble("credits"));
+			u.setBanned(rs.getInt("banned"));
 		}catch(Exception e){
 			e.printStackTrace();
 		}

@@ -235,19 +235,17 @@ public class UserHelper {
 		}
 	}
 	
-	public ArrayList<String> getAllUsers(){
+	public ArrayList<User> getAllUsers(){
 		System.out.println("Getting all users");
 		String query = "SELECT * FROM users";
 		ResultSet rs = null;
-		User u = null;
-		ArrayList<String> userList = new ArrayList<String>();
+		ArrayList<User> userList = new ArrayList<User>();
 		try{
 			
 			PreparedStatement pstmt = dbc.createPreparedStatement(query);
 			rs = pstmt.executeQuery();
 			while(rs.next()){
-				String username = rs.getString("username");
-				userList.add(username);
+				userList.add(User.toUser(rs));
 			}
 			pstmt.close();
 		}catch(Exception e){
