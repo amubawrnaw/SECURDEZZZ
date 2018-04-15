@@ -8,7 +8,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-4" style="margin-top: 8px;">
-				<label>Ban or Unban User: </label>
+				<label>Ban or Unban Product Manager: </label>
 			</div>
 			<div class="col-md-6">
 				<input class="form-control" type = "text" id = "username"/>
@@ -50,6 +50,16 @@
 		</div>
 		
 	</div>
+	<div class="col-md-4">
+		<div class="row">
+			<div class="col" style="text-align:center;">
+				<h3>Banned Product Managers</h3>
+				<ul class="list-group" id="banned-pms">
+					
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>
 
 	
@@ -78,6 +88,20 @@
 			else
 				bannedUsers.push(allUsers[i]);
 		}
+		
+		$("#banned-pms").empty();
+		
+		if(obj != null){
+			for(i = 0; i < bannedUsers.length; i++){
+				var item;
+				item = $("<li>");
+				$(item).addClass("list-group-item");
+				$(item).append(bannedUsers[i]);
+				
+				$("#banned-pms").append(item);
+			}
+		}
+		
 		console.log("unbanned guys ");
 		console.log(unbannedUsers);
 		console.log("banned guys " + bannedUsers);
