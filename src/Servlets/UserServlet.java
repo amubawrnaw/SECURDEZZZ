@@ -71,14 +71,13 @@ public class UserServlet extends HttpServlet {
 					
 					System.out.println("PM " + user + " logged in");
 					response.addCookie(cookie);
-				}else{
-					if(helper.loginAdmin(user, pass) != null)
-					{
+				}else if(helper.loginAdmin(user, pass) != null) {
 						b = true;
 						String t = helper.createUserToken(user);
 						Cookie cookie = new Cookie("token", t);
+						
+						System.out.println("Admin " + user + " logged in");
 						response.addCookie(cookie);
-					}
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -93,7 +92,8 @@ public class UserServlet extends HttpServlet {
 			ProductManager pm = null;
 			
 			String temp = helper.getUserIdByToken(user);
-			if(temp==null) temp = pmHelper.getProdNameByToken(user);
+			if(temp==null) 
+				temp = pmHelper.getProdNameByToken(user);
 			user = temp;
 			
 			try {
@@ -130,9 +130,7 @@ public class UserServlet extends HttpServlet {
 				}
 			}
 			
-		}else if(param.compareToIgnoreCase("logout") == 0){
-			
-			
+		}else if(param.compareToIgnoreCase("logout") == 0){	
 			Cookie[] cook = request.getCookies();
 			for(Cookie c : cook){
 				if(c.getName().equals("username")){

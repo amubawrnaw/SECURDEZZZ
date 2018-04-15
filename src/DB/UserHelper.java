@@ -92,7 +92,7 @@ public class UserHelper {
 		String t = null;
 		try{
 			PreparedStatement pstmt = dbc.createPreparedStatement(query);
-			t = ph.generateSalt();
+			t = ph.generateToken();
 			pstmt.setString(1, t);
 			pstmt.setString(2, user);
 			System.out.println("Salt:" + t + " created!");

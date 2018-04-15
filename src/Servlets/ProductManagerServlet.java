@@ -83,6 +83,7 @@ public class ProductManagerServlet extends HttpServlet {
 		if(param.compareToIgnoreCase("restock") == 0)
 		{
 			String username = (String) request.getParameter("username").split("&")[0];
+			username = helper.getProdNameByToken(username);
 			int prodId = Integer.parseInt(request.getParameter("prodId").split("&")[0]);
 			int quantity = Integer.parseInt(request.getParameter("qty").split("&")[0]);
 			b = pHelper.restockProduct(prodId, getProdManagerId(username), quantity);
@@ -90,6 +91,7 @@ public class ProductManagerServlet extends HttpServlet {
 		else if (param.compareToIgnoreCase("add") == 0)
 		{
 			String username = (String) request.getParameter("username").split("&")[0];
+			username = helper.getProdNameByToken(username);
 			String name = (String) request.getParameter("name").split("&")[0];
 			double price = Double.parseDouble((String) request.getParameter("price").split("&")[0]);
 			int quantity = Integer.parseInt(request.getParameter("qty").split("&")[0]);
@@ -100,6 +102,7 @@ public class ProductManagerServlet extends HttpServlet {
 		else if (param.compareToIgnoreCase("delete") == 0)
 		{
 			String username = (String) request.getParameter("username").split("&")[0];
+			username = helper.getProdNameByToken(username);
 			int prodId = Integer.parseInt(request.getParameter("prodId").split("&")[0]);
 			b = pHelper.deleteProduct(prodId, getProdManagerId(username));
 		}
@@ -107,6 +110,7 @@ public class ProductManagerServlet extends HttpServlet {
 		else if (param.compareToIgnoreCase("edit") == 0)
 		{
 			String username = (String) request.getParameter("username").split("&")[0];
+			username = helper.getProdNameByToken(username);
 			int prodId = Integer.parseInt(request.getParameter("prodId").split("&")[0]);
 			String imageLink = null;
 			String name = null;
@@ -138,10 +142,11 @@ public class ProductManagerServlet extends HttpServlet {
 		
 		else if (param.compareToIgnoreCase("register") == 0)
 		{
-			String userName = (String) request.getParameter("username").split("&")[0];
+			String username = (String) request.getParameter("username").split("&")[0];
+			username = helper.getProdNameByToken(username);
 			String pass = (String) request.getParameter("pass").split("&")[0];
 			String storeName = (String) request.getParameter("storeName").split("&")[0];
-			ProductManager pm = new ProductManager(userName, storeName);
+			ProductManager pm = new ProductManager(username, storeName);
 			
 			try {
 				b = helper.register(pm, pass);
@@ -152,6 +157,7 @@ public class ProductManagerServlet extends HttpServlet {
 		}else if (param.compareToIgnoreCase("ban") == 0){
 			String user = (String) request.getParameter("user").split("&")[0];
 			String adminUsername = (String) request.getParameter("admin").split("&")[0];
+			adminUsername = helper.getProdNameByToken(adminUsername);
 			String reason = (String) request.getParameter("reason").split("&")[0];
 			String password = (String) request.getParameter("password").split("&")[0];
 			boolean isBanned = helper.getBannedStatus(user);
