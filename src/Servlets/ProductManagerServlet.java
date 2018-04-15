@@ -63,6 +63,17 @@ public class ProductManagerServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	
+	private int getProdManagerId(String username){
+		int prodManagerId = -1;
+		try {
+			prodManagerId = helper.getProductManagerIdByUsername(username);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return prodManagerId;
+	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String param = (String) request.getParameter("param").split("&")[0];
 		//TODO As mentioned above, just 2 TODOs for emphasis
@@ -72,67 +83,31 @@ public class ProductManagerServlet extends HttpServlet {
 		if(param.compareToIgnoreCase("restock") == 0)
 		{
 			String username = (String) request.getParameter("username").split("&")[0];
-			int prodManagerId = -1;
-			try {
-				prodManagerId = helper.getProductManagerIdByUsername(username);
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			int prodId = Integer.parseInt(request.getParameter("prodId").split("&")[0]);
 			int quantity = Integer.parseInt(request.getParameter("qty").split("&")[0]);
-			b = pHelper.restockProduct(prodId, prodManagerId, quantity);
+			b = pHelper.restockProduct(prodId, getProdManagerId(username), quantity);
 		}
 		else if (param.compareToIgnoreCase("add") == 0)
 		{
 			String username = (String) request.getParameter("username").split("&")[0];
-			int prodManagerId = -1;
-			try {
-				prodManagerId = helper.getProductManagerIdByUsername(username);
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			String name = (String) request.getParameter("name").split("&")[0];
 			double price = Double.parseDouble((String) request.getParameter("price").split("&")[0]);
 			int quantity = Integer.parseInt(request.getParameter("qty").split("&")[0]);
 			String imageLink = (String) request.getParameter("imgLink").split("&")[0];
-			b = pHelper.addProduct(name, prodManagerId, price, quantity, imageLink);
+			b = pHelper.addProduct(name, getProdManagerId(username), price, quantity, imageLink);
 		}
 		
 		else if (param.compareToIgnoreCase("delete") == 0)
 		{
 			String username = (String) request.getParameter("username").split("&")[0];
-			int prodManagerId = -1;
-			try {
-				prodManagerId = helper.getProductManagerIdByUsername(username);
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			int prodId = Integer.parseInt(request.getParameter("prodId").split("&")[0]);
-			b = pHelper.deleteProduct(prodId, prodManagerId);
+			b = pHelper.deleteProduct(prodId, getProdManagerId(username));
 		}
 		
 		else if (param.compareToIgnoreCase("edit") == 0)
 		{
 			String username = (String) request.getParameter("username").split("&")[0];
-			int prodManagerId = -1;
-			try {
-				prodManagerId = helper.getProductManagerIdByUsername(username);
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			int managerId = -1;
-			try {
-				managerId = helper.getProductManagerIdByUsername(username);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			int prodId = Integer.parseInt(request.getParameter("prodId").split("&")[0]);
-			
 			String imageLink = null;
 			String name = null;
 			double price = -1;
@@ -150,13 +125,13 @@ public class ProductManagerServlet extends HttpServlet {
 				System.out.println("Name set");
 			}
 			if(price != -1){
-				b = pHelper.editProductPrice(price, managerId, prodId);
+				b = pHelper.editProductPrice(price, getProdManagerId(username), prodId);
 				System.out.println("Price updated!");
 			}if((!Objects.isNull(imageLink))){
-				b = pHelper.editProductImage(imageLink, managerId, prodId);
+				b = pHelper.editProductImage(imageLink, getProdManagerId(username), prodId);
 				System.out.println("Image link updated!");
 			}if((!Objects.isNull(name))){
-				b = pHelper.editProductName(name, managerId, prodId);
+				b = pHelper.editProductName(name, getProdManagerId(username), prodId);
 				System.out.println("Product name updated!");
 			}
 		}

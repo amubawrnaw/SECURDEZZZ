@@ -60,19 +60,23 @@ public class UserServlet extends HttpServlet {
 			try {
 				if(helper.login(user, pass) != null){
 					b = true;
-					Cookie cookie = new Cookie("username", user);
+					String t = helper.createUserToken(user);
+					Cookie cookie = new Cookie("token", t);
 					System.out.println("User " + user + " logged in");
 					response.addCookie(cookie);
 				}else if(pmHelper.login(user,pass) != null){
 					b = true;
-					Cookie cookie = new Cookie("username", user);
+					String t = pmHelper.createProdManToken(user);
+					Cookie cookie = new Cookie("token", t);
+					
 					System.out.println("PM " + user + " logged in");
 					response.addCookie(cookie);
 				}else{
 					if(helper.loginAdmin(user, pass) != null)
 					{
 						b = true;
-						Cookie cookie = new Cookie("username", helper.loginAdmin(user, pass));
+						String t = helper.createUserToken(user);
+						Cookie cookie = new Cookie("token", t);
 						response.addCookie(cookie);
 					}
 				}
@@ -87,6 +91,11 @@ public class UserServlet extends HttpServlet {
 			String user = (String) request.getParameter("user").split("&")[0];
 			User u = null;
 			ProductManager pm = null;
+			
+			String temp = helper.getUserIdByToken(user);
+			if(temp==null) temp = pmHelper.getProdNameByToken(user);
+			user = temp;
+			
 			try {
 				u = helper.getUserByUsername(user);
 			} catch (SQLException e) {
@@ -122,16 +131,24 @@ public class UserServlet extends HttpServlet {
 			}
 			
 		}else if(param.compareToIgnoreCase("logout") == 0){
+			
+			
 			Cookie[] cook = request.getCookies();
 			for(Cookie c : cook){
 				if(c.getName().equals("username")){
 					c.setMaxAge(0);
+
+					helper.removeUserToken(c.getValue());
+					
 					response.addCookie(c);
 					break;
 				}
 			}
 		}else if(param.compareToIgnoreCase("getCredits") == 0){
 			String user = (String) request.getParameter("user").split("&")[0];
+			String temp = helper.getUserIdByToken(user);
+			if(temp==null) temp = pmHelper.getProdNameByToken(user);
+			user = temp;
 			double credits = 0.0;
 			try {
 				credits = helper.getCredits(user);
@@ -144,6 +161,9 @@ public class UserServlet extends HttpServlet {
 			//TODO this checks if the verification code provided by the user is the same as the emailed one
 			String verificationCode = (String) request.getParameter("code").split("&")[0];
 			String username = (String) request.getParameter("user").split("&")[0];
+			String temp = helper.getUserIdByToken(username);
+			if(temp==null) temp = pmHelper.getProdNameByToken(username);
+			username = temp;
 			boolean isValidCode = helper.confirmPasswordEdit(username, verificationCode);
 			System.out.println(isValidCode);
 			response.getWriter().write(String.valueOf(isValidCode));
@@ -177,6 +197,7 @@ public class UserServlet extends HttpServlet {
 				response.getWriter().write(String.valueOf(b));
 			}else if(param.compareToIgnoreCase("reload") == 0){
 				String userName = (String) request.getParameter("user").split("&")[0];
+				userName = helper.getUserIdByToken(userName);
 				double amount = Double.parseDouble(request.getParameter("amount").split("&")[0]);
 				try {
 					helper.reloadCredits(userName, amount);
@@ -204,12 +225,22 @@ public class UserServlet extends HttpServlet {
 			}else if (param.compareToIgnoreCase("editPass") == 0){
 				String username = (String) request.getParameter("user").split("&")[0];
 				String password = (String) request.getParameter("password").split("&")[0];
+				
+				String temp = helper.getUserIdByToken(username);
+				if(temp==null) temp = pmHelper.getProdNameByToken(username);
+				username = temp;
+				
 				helper.editPassword(username, password);
 				System.out.println("Password set");
 			}else if (param.compareToIgnoreCase("edit") == 0){
 				String username = (String) request.getParameter("user").split("&")[0];
 				String newFname = null;
 				String newLname = null;
+				
+				String temp = helper.getUserIdByToken(username);
+				if(temp==null) temp = pmHelper.getProdNameByToken(username);
+				username = temp;
+				
 				if(!(request.getParameter("newFname").split("&")[0].equalsIgnoreCase("none"))){
 					newFname = (String) request.getParameter("newFname").split("&")[0];
 					System.out.println("First name set");

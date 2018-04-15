@@ -78,6 +78,8 @@ public class OrderServlet extends HttpServlet {
 	private void getOrderByUserId(HttpServletRequest request, HttpServletResponse response) throws SQLException{
 		String username = request.getParameter("username");
 		UserHelper uh = new UserHelper();
+		username = uh.getUserIdByToken(username);
+		
 		int userId = uh.getUserIdByUsername(username);
 		System.out.println("getting by userId");
 		Order[] orders = oh.getOrdersByUserId(userId);
@@ -93,6 +95,7 @@ public class OrderServlet extends HttpServlet {
 	private void getOrdersByProductManager(HttpServletRequest request, HttpServletResponse response){
 		String username = request.getParameter("user");
 		ProductManagerHelper pmh = new ProductManagerHelper();
+		username = pmh.getProdNameByToken(username);
 		int managerId =  01;
 		try {
 			managerId = pmh.getProductManagerIdByUsername(username);

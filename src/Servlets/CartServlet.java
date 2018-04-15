@@ -42,6 +42,7 @@ public class CartServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String username = (String) request.getParameter("username").split("&")[0];
+		username = uHelper.getUserIdByToken(username);
 		int userId = -1;
 		try {
 			userId = uHelper.getUserIdByUsername(username);
@@ -59,6 +60,7 @@ public class CartServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String param = (String) request.getParameter("param").split("&")[0];
 		String username = (String) request.getParameter("username").split("&")[0];
+		username = uHelper.getUserIdByToken(username);
 		System.out.println(param);
 		int userId = -1;
 		try {
