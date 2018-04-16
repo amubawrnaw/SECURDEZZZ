@@ -73,7 +73,7 @@ public class UserServlet extends HttpServlet {
 					response.addCookie(cookie);
 				}else if(helper.loginAdmin(user, pass) != null) {
 						b = true;
-						String t = helper.createUserToken(user);
+						String t = helper.createAdminToken(user);
 						Cookie cookie = new Cookie("token", t);
 						
 						System.out.println("Admin " + user + " logged in");
@@ -94,6 +94,8 @@ public class UserServlet extends HttpServlet {
 			String temp = helper.getUserIdByToken(user);
 			if(temp==null) 
 				temp = pmHelper.getProdNameByToken(user);
+			if(temp == null)
+				temp = helper.getAdminByToken(user);
 			user = temp;
 			
 			try {
@@ -125,6 +127,7 @@ public class UserServlet extends HttpServlet {
 					}if (adminUser != null) {
 						System.out.println("I'm an admin!");
 						Admin admin = new Admin(adminUser);
+						System.out.println(gson.toJson(admin));
 						response.getWriter().write(gson.toJson(admin));
 					}
 				}
@@ -132,8 +135,11 @@ public class UserServlet extends HttpServlet {
 			
 		}else if(param.compareToIgnoreCase("logout") == 0){	
 			Cookie[] cook = request.getCookies();
+			System.out.println("Logging out user");
 			for(Cookie c : cook){
-				if(c.getName().equals("username")){
+				System.out.println("Im in the loop");
+				if(c.getName().equals("token")){
+					System.out.println("Cookie found!");
 					c.setMaxAge(0);
 
 					helper.removeUserToken(c.getValue());
@@ -178,20 +184,28 @@ public class UserServlet extends HttpServlet {
 			String param = (String) request.getParameter("param").split("&")[0];
 			System.out.println(param);
 			if(param.compareToIgnoreCase("register") == 0){
-				String email = (String) request.getParameter("user").split("&")[0];
+				String email = (String) request.getParameter("email").split("&")[0];
 				String userName = (String) request.getParameter("user").split("&")[0];
 				String pass = (String) request.getParameter("pass").split("&")[0];
 				String fName = (String) request.getParameter("fName").split("&")[0];
 				String lName = (String) request.getParameter("lName").split("&")[0];
 				User user = new User(userName, 0.0, fName, lName);
 				boolean b = false;
-				System.out.println("Registering user " + userName);
+				boolean takenByPM = false;
 				try {
-					b = helper.register(email, user, pass);
-				} catch (SQLException e) {
+					if(pmHelper.getProductManagerByUsername(userName) != null)
+						takenByPM = true;
+				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					e1.printStackTrace();
 				}
+				if(!takenByPM)
+					try {
+						b = helper.register(email, user, pass);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				response.getWriter().write(String.valueOf(b));
 			}else if(param.compareToIgnoreCase("reload") == 0){
 				String userName = (String) request.getParameter("user").split("&")[0];

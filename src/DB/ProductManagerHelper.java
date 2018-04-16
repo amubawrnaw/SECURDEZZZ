@@ -287,7 +287,7 @@ public class ProductManagerHelper {
 			return finalArr;
 	}
 
-	public boolean register(ProductManager pm, String password) throws SQLException {
+	public boolean register(String email, ProductManager pm, String password) throws SQLException {
 		boolean regSuccess = false;
 		
 		ProductManager pmCheck = getProductManagerByUsername(pm.getUsername());
@@ -295,8 +295,8 @@ public class ProductManagerHelper {
 		if(pmCheck == null){
 			System.out.println("Registration successful for user " + pm.getUsername());
 			regSuccess = true;
-			String query = "INSERT INTO product_manager(username, password, store_name, salt) " 
-			+ "VALUES(?,?,?,?)";
+			String query = "INSERT INTO product_manager(username, password, store_name, salt, email) " 
+			+ "VALUES(?,?,?,?,?)";
 			try{
 				String salt = ph.generateSalt();
 				PreparedStatement pstmt = dbc.createPreparedStatement(query);
@@ -304,6 +304,7 @@ public class ProductManagerHelper {
 				pstmt.setString(2, ph.hashPassword(password, salt));
 				pstmt.setString(3, pm.getStoreName());
 				pstmt.setString(4, salt);
+				pstmt.setString(5, email);
 				pstmt.executeUpdate();
 				pstmt.close();
 				
@@ -363,7 +364,7 @@ public class ProductManagerHelper {
 			t = ph.generateToken();
 			pstmt.setString(1, t);
 			pstmt.setString(2, user);
-			System.out.println("Salt:" + t + " created!");
+			System.out.println("Token:" + t + " created!");
 			pstmt.executeUpdate();
 			pstmt.close();
 		}catch(Exception e){

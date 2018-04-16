@@ -7,6 +7,7 @@
 <div class = "row mt-2">
     <div class = "offset-md-4 col-md-4">
         <input type="text" class="form-control" id="storename" placeholder="Store Name">
+        <input type="text" class="form-control" id="email" placeholder="Email">
         <input type="text" class="form-control" id="usernameInput" placeholder="Username">
         <input type="password" class="form-control" id="passwordInput" placeholder="Password">
         <label>Password must be atleast 8 characters, with atleast 1 of each: number, lowercase, uppercase, and special character</label>
@@ -16,9 +17,10 @@
 <script>
 	$("#btnSubmit").click(function(){
 		var storeName = htmlEscape(document.getElementById("storename").value);
+		var email = htmlEscape(document.getElementById("email").value);
 	    var user = htmlEscape(document.getElementById("usernameInput").value);
 	    var pass = htmlEscape(document.getElementById("passwordInput").value);              
-	    var path = "ProductManagerServlet?username="+user+"&pass="+pass+"&storeName="+storeName+"&param=register";
+	    var path = "ProductManagerServlet?email="+email+"&username="+user+"&pass="+pass+"&storeName="+storeName+"&param=register";
 	    if(passwordRegex.test(pass))
 		    $.post(path, function(obj){
 		        console.log(obj);
@@ -29,7 +31,7 @@
 	               	 window.location.reload();
 	               });
 		        }else{
-		            alert("Username already taken!");
+		            alert("Username/Email/Store Name already taken!");
 		        }
 		    });
 	    else

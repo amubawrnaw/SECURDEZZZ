@@ -87,6 +87,23 @@ public class UserHelper {
 		return s;
 	}
 	
+	public String getAdminByToken(String token){
+		String query = "SELECT admin FROM tokens WHERE id_tokens = ?";
+		System.out.println(token);
+		String s = null;
+		try{
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			pstmt.setString(1, token);
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			s = rs.getString("admin");
+			
+			pstmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return s;
+	}
 	public String createUserToken(String user){
 		String query = "INSERT INTO tokens(id_tokens, user) VALUES(?,?)";
 		String t = null;
@@ -95,7 +112,7 @@ public class UserHelper {
 			t = ph.generateToken();
 			pstmt.setString(1, t);
 			pstmt.setString(2, user);
-			System.out.println("Salt:" + t + " created!");
+			System.out.println("Token:" + t + " created!");
 			pstmt.executeUpdate();
 			pstmt.close();
 		}catch(Exception e){
@@ -105,6 +122,24 @@ public class UserHelper {
 		return t;
 	}
 	
+	
+	public String createAdminToken(String user){
+		String query = "INSERT INTO tokens(id_tokens, admin) VALUES(?,?)";
+		String t = null;
+		try{
+			PreparedStatement pstmt = dbc.createPreparedStatement(query);
+			t = ph.generateToken();
+			pstmt.setString(1, t);
+			pstmt.setString(2, user);
+			System.out.println("Token:" + t + " created!");
+			pstmt.executeUpdate();
+			pstmt.close();
+		}catch(Exception e){
+			t = null;
+			e.printStackTrace();
+		}
+		return t;
+	}
 	public void removeUserToken(String token){
 		String query = "DELETE FROM tokens WHERE id_tokens = ?";
 		try{

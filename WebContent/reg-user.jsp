@@ -36,7 +36,7 @@
 		                });
 			           
 			        }else{
-			            alert("Username already taken!");
+			            alert("Username/Email already taken!");
 			        }
 			    });
 		    } else

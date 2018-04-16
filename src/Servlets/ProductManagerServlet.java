@@ -42,7 +42,8 @@ public class ProductManagerServlet extends HttpServlet {
 		System.out.println(param);
 		if (param.compareToIgnoreCase("getByPM") == 0) 
 		{
-			String username = (String) request.getParameter("user").split("&")[0];
+			String username = (String) request.getParameter("username").split("&")[0];
+			username = helper.getProdNameByToken(username);
 			Product[] products = null;
 			System.out.println("getByPM");
 			int managerId = -1;
@@ -142,18 +143,29 @@ public class ProductManagerServlet extends HttpServlet {
 		
 		else if (param.compareToIgnoreCase("register") == 0)
 		{
+			String email = (String) request.getParameter("email").split("&")[0];
 			String username = (String) request.getParameter("username").split("&")[0];
-			username = helper.getProdNameByToken(username);
 			String pass = (String) request.getParameter("pass").split("&")[0];
 			String storeName = (String) request.getParameter("storeName").split("&")[0];
 			ProductManager pm = new ProductManager(username, storeName);
-			
+			UserHelper uHelper = new UserHelper();
+			boolean takenByUser = false;
 			try {
-				b = helper.register(pm, pass);
+				if (uHelper.getUserByUsername(username) != null || uHelper.getAdminByUsername(username) != null){
+					takenByUser = true;
+				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			if (!takenByUser)
+				try {
+					b = helper.register(email, pm, pass);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					b = false;
+					e.printStackTrace();
+				}
 		}else if (param.compareToIgnoreCase("ban") == 0){
 			String user = (String) request.getParameter("user").split("&")[0];
 			String adminUsername = (String) request.getParameter("admin").split("&")[0];
