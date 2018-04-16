@@ -81,7 +81,7 @@
         });
     });
     $("#products").on('click','#clickable',function(){
-        itemId = $(this).siblings(2).children().first().html();
+        itemId = $(this).siblings(2).children().first().text();
         $("#center").load("item-info.jsp");
     });
      function addPhotos(obj){

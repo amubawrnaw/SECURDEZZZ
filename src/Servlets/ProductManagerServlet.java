@@ -26,6 +26,7 @@ public class ProductManagerServlet extends HttpServlet {
     private final ProductManagerHelper helper = new ProductManagerHelper();
     private final ProductHelper pHelper = new ProductHelper();
     private final Gson gson = new GsonBuilder().create();
+    private final UserHelper uHelper = new UserHelper();
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -148,7 +149,6 @@ public class ProductManagerServlet extends HttpServlet {
 			String pass = (String) request.getParameter("pass").split("&")[0];
 			String storeName = (String) request.getParameter("storeName").split("&")[0];
 			ProductManager pm = new ProductManager(username, storeName);
-			UserHelper uHelper = new UserHelper();
 			boolean takenByUser = false;
 			try {
 				if (uHelper.getUserByUsername(username) != null || uHelper.getAdminByUsername(username) != null){
@@ -169,7 +169,6 @@ public class ProductManagerServlet extends HttpServlet {
 		}else if (param.compareToIgnoreCase("ban") == 0){
 			String user = (String) request.getParameter("user").split("&")[0];
 			String adminUsername = (String) request.getParameter("admin").split("&")[0];
-			adminUsername = helper.getProdNameByToken(adminUsername);
 			String reason = (String) request.getParameter("reason").split("&")[0];
 			String password = (String) request.getParameter("password").split("&")[0];
 			boolean isBanned = helper.getBannedStatus(user);

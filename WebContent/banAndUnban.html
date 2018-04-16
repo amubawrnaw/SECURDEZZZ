@@ -112,22 +112,25 @@
 	$("#submit").click(function(){
 		console.log("Submitted");
 		var admin = document.getElementById("adminUsername").value;
-		var name_or_null = document.cookie.split("=")[1];
-		console.log(name_or_null + " " + admin);
-		var adminCheck = false;
-		if (admin == name_or_null){
-			console.log("in here");
-			$.get("UserServlet?user=" + name_or_null + "&param=user", function(obj){
-	            var person = JSON.parse(obj);
-	            console.log(person.adminUsername);
-	            if (person.adminUsername != null){
-	            	console.log("I'm an admin god! Admincheck = true!");
-	            	adminCheck = true;
-	            	console.log(adminCheck);
-	            	createPOSTRequest(admin, adminCheck);
-	            }
-	        });
-		}
+		var token = document.cookie.split("=")[1];
+		$.get("UserServlet?param=user&user="+token, function(obj){
+			var adminCheck = JSON.parse(obj);
+			console.log(admin.adminUsername + " " + admin);
+			if (admin == adminCheck.adminUsername){
+				console.log("in here");
+				$.get("UserServlet?user=" + token + "&param=user", function(obj){
+		            var person = JSON.parse(obj);
+		            console.log(person.adminUsername);
+		            if (person.adminUsername != null){
+		            	console.log("I'm an admin god! Admincheck = true!");
+		            	adminCheck = true;
+		            	console.log(adminCheck);
+		            	createPOSTRequest(admin, adminCheck);
+		            }
+		        });
+			}
+		});
+		var adminCheck = false;		
 		
 	});
 	
