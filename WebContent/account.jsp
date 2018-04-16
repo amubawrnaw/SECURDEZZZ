@@ -32,8 +32,9 @@
  		</div>
  	</div>
  </div>
-
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
 	var username = document.cookie.split("=")[1];
 	$.get("UserServlet?param=user&user="+username, function(obj){
 		if(obj != null)

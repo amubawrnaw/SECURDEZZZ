@@ -29,7 +29,9 @@
     </div>
   </div>
 </nav>
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
 $("#navManageUser").click(function(){
     $(this).parent().siblings().removeClass("active");
     $(this).parent().addClass("active");

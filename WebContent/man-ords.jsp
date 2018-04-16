@@ -32,7 +32,9 @@
         </div>
     </div>
 </div>
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
     var selectedProduct;
     var jsonarr;
     var user = document.cookie.split("=")[1];

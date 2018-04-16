@@ -16,7 +16,9 @@
         </div>
     </div>
 </div>
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
     $("#toCart").click(function(){
         $.post("CartServlet?param=addItemToCart&username="+user+"&prodId="+itemId+"&qty="+$("#purchaseQty").val(),function(obj){
             if(obj == "true"){

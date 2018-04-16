@@ -41,7 +41,9 @@
     </div>
     
 </div>
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
 	jQuery.ajaxSetup({async:false});
     var dselect = false;
     var jsonarr;

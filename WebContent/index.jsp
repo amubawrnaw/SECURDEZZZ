@@ -5,7 +5,6 @@
 	    <link href="css/custom.css" rel="stylesheet">
 	    <script src="frameworks/jquery/jquery.min.js"></script>
 	    <script src="frameworks/bootstrap/js/bootstrap.bundle.min.js"></script>
-	    <script src = "javascript/htmlEscape.js"></script>
     </head>
     <body>
 	    <div class="container">
@@ -17,7 +16,9 @@
 		    </div>
 	    </div>    
     </body>
-    <script>
+    <script src = "javascript/htmlEscape.js"></script>
+	<script>
+	checkIfValidRedirect();
         var prodid = window.location.href.split("=")[1];
         var name_or_null = document.cookie.split("=")[1];
         if(prodid != null){

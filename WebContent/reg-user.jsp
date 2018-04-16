@@ -14,7 +14,9 @@
         <button type="button" class="btn btn-primary float-right" id="btnSubmit">Submit</button>
     </div>
 </div>
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
 	$("#btnSubmit").click(function(){
 		var email = document.getElementById("email").value;
 		if(!(email.includes("@")))

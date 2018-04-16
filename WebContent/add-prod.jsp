@@ -3,7 +3,9 @@
 <input type="number" class="form-control" id="Price" placeholder="Price">
 <input type="number" class="form-control" id="Quantity" placeholder="Quantity">
 <button type="button" class="btn btn-primary" id="btnSubmit">Submit</button>
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
     $("#btnSubmit").click(function(){
         var Name = htmlEscape($("#Name").val());
 

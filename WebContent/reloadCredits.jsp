@@ -2,7 +2,9 @@
 <div id = "creditDetails">
 </div>
 </body>
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
 	var username = document.cookie.split("=")[1];
 	$.get("UserServlet?param=getCredits&user="+username, function(obj){
 		var credits = obj;

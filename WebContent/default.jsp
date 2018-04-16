@@ -67,7 +67,9 @@
 
 	</div>
 	<!-- /.container -->
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
     var itemId;
     $.get("ProductServlet?param=all", function(obj){
         console.log(obj);

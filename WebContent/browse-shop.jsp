@@ -65,3 +65,7 @@
 
 	</div>
 	<!-- /.container -->
+	<script src = "javascript/htmlEscape.js"></script>
+<script>
+	checkIfValidRedirect();
+</script>

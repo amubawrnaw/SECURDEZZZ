@@ -19,7 +19,9 @@
 	</div>
 </div>
 
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
     $("#btnSubmit").click(function(){
         console.log("Hehe");
         var chec = 'false';

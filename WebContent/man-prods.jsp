@@ -16,7 +16,9 @@
         </div>
     </div>
 </div>
+<script src = "javascript/htmlEscape.js"></script>
 <script>
+	checkIfValidRedirect();
     var select = false;
     $("#prodList").on('click', '.selectable', function(){
         select = true;

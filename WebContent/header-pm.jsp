@@ -25,8 +25,9 @@
           </ul>
         </div>
       </div>
-      <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    	<script>
+     <script src = "javascript/htmlEscape.js"></script>
+	<script>
+		checkIfValidRedirect();
     	$("#logo").click(function(){
     	    $(this).parent().siblings().removeClass("active");
     	    $(this).parent().addClass("active");
