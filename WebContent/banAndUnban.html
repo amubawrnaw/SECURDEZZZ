@@ -97,10 +97,17 @@
 				var item;
 				item = $("<li>");
 				$(item).addClass("list-group-item");
-				$(item).append(bannedUsers[i]);
+				$(item).append(bannedUsers[i].username);
 				
 				$("#banned-users").append(item);
 			}
+		}else{
+			var empty;
+			empty = $("<li>");
+			$(empty).addClass("list-group-item");
+			$(empty).append("There are no banned users.");
+			
+			$("#banned-users").append(empty);
 		}
 		
 		
@@ -126,6 +133,7 @@
 		            	adminCheck = true;
 		            	console.log(adminCheck);
 		            	createPOSTRequest(admin, adminCheck);
+		            	//location.reload();
 		            }
 		        });
 			}

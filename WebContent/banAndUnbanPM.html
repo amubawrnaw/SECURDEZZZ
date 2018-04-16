@@ -96,10 +96,17 @@
 				var item;
 				item = $("<li>");
 				$(item).addClass("list-group-item");
-				$(item).append(bannedUsers[i]);
+				$(item).append(bannedUsers[i].username);
 				
 				$("#banned-pms").append(item);
 			}
+		}else{
+			var empty;
+			empty = $("<li>");
+			$(empty).addClass("list-group-item");
+			$(empty).append("There are no banned product managers.");
+			
+			$("#banned-pms").append(empty);
 		}
 		
 		console.log("unbanned guys ");
@@ -124,6 +131,7 @@
 		            	adminCheck = true;
 		            	console.log(adminCheck);
 		            	createPOSTRequest(admin, adminCheck);
+		            	//location.reload();
 		            }
 		        });
 			}
