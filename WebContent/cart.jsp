@@ -10,14 +10,14 @@
             <div class = "col-md-3">
                 <h3>Quantity</h3>
             </div>
-            <div class = "col-md-3">
-                <h3>Total</h3>
-            </div>
+			<div class="col-md-3">
+				<h3>Total</h3>
+			</div>
         </div>
         <div class="row">
-	        <div id = 'items'>
-	        
-	        </div>
+       		<div class="col" id = 'items'>
+        
+       		</div>     
         </div>
         <div class="row no-gutters mt-3">
         	<div class="col-sm-auto">
@@ -35,9 +35,25 @@
     </div>
     <div class = "col-md-4">
         <h2 id = "balance"></h2>
-        <h2 class = "top100" id = "total"></h2>
-        <button class = "btn btn-primary" id = "checkOut">Check Out</button>
-        <p>	Address (for shipping): <textarea id = "address"style="height:200px"/></textarea></p>
+        <div class="row mb-5 mt-1">
+        	<div class = "col-md-12">
+	            <p>Total: </p>
+	            <p id = "total" style="font-size:30px; font-weight:bold;"></p>
+	        </div>
+        </div>
+		<div class="row">
+			<div class="col">
+				<div class="form-group">
+					<label for="address">Address (for shipping):</label>
+					<textarea class="form-control" id = "address" rows="4"/></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<button class = "btn btn-primary btn-block" id = "checkOut">Check Out</button>
+			</div>
+		</div>
     </div>
     
 </div>

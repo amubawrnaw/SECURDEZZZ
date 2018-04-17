@@ -29,7 +29,7 @@ public class OrderHelper {
 	
 	
 	public Order[] getOrdersByUserId(int userId){
-		String query = "SELECT * FROM `order` WHERE u_id = " + userId;
+		String query = "SELECT * FROM order WHERE u_id = " + userId;
 		return getOrders(query);
 	}
 	

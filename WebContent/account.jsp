@@ -82,6 +82,7 @@
 			
 			//For Orders
 			var jason = JSON.parse(obj);
+			console.log("I miss the old kanye")
 			console.log(jason);
 			
 			var orders = [];
